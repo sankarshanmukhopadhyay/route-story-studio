@@ -33,7 +33,12 @@ const requirements = [
   [safeUrl.includes('ALLOWED_MAP_HOSTS'), 'Map-link host allowlist is missing.'],
   [safeUrl.includes("url.protocol !== 'https:'"), 'Map-link HTTPS boundary is missing.'],
   [safeUrl.includes('MAX_MAP_LINK_LENGTH'), 'Map-link length boundary is missing.'],
-  [provider.includes('https://api.openrouteservice.org'), 'Routing provider host boundary is missing.'],
+  [
+    (provider.includes('new URL(') || provider.includes('URL(')) &&
+      provider.includes('.hostname') &&
+      provider.includes('api.openrouteservice.org'),
+    'Routing provider host boundary is missing.'
+  ],
   [provider.includes('MAX_PROVIDER_RESPONSE_BYTES'), 'Provider response-size limit is missing.'],
   [provider.includes('MAX_GENERATED_POINTS'), 'Generated geometry point limit is missing.'],
   [provider.includes('Authorization: key'), 'Provider credential header boundary is missing.'],
