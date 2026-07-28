@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateStatistics, formatDistance, formatDuration, haversineDistance } from '../src/domain/route-statistics.js';
+import { calculateStatistics, elevationMetricLabel, formatDistance, formatDuration, haversineDistance } from '../src/domain/route-statistics.js';
 
 test('calculates a plausible distance between Kolkata and Howrah reference points', () => {
   const distance = haversineDistance(
@@ -20,6 +20,10 @@ test('calculates duration and elevation changes', () => {
   assert.equal(result.durationSeconds, 7200);
   assert.equal(result.elevationGainMetres, 25);
   assert.equal(result.elevationLossMetres, 15);
+  assert.equal(result.minimumElevationMetres, 10);
+  assert.equal(result.maximumElevationMetres, 35);
+  assert.equal(result.elevationRangeMetres, 25);
+  assert.equal(result.netElevationChangeMetres, 10);
   assert.ok(result.distanceMetres > 0);
 });
 
@@ -40,4 +44,10 @@ test('does not connect separate route segments when calculating distance', () =>
 
 test('formats imperial route distance', () => {
   assert.equal(formatDistance(1609.344, 'imperial'), '1.0 mi');
+});
+
+
+test('uses distinct cumulative ascent labels for planned and recorded routes', () => {
+  assert.equal(elevationMetricLabel({ sourceType: 'planned-route' }), 'ESTIMATED ASCENT');
+  assert.equal(elevationMetricLabel({ sourceType: 'recorded-track' }), 'ELEVATION GAIN');
 });

@@ -25,3 +25,4 @@
 .advanced-acquisition[open]>summary{border-bottom:1px solid rgba(255,255,255,.12)}
 .advanced-acquisition>.advanced-notice{margin:1rem 1.1rem;padding:.8rem 1rem;border-left:3px solid #ef8f4c;background:rgba(239,143,76,.08)}
 .advanced-acquisition>.acquisition-panel,.advanced-acquisition>.provider-panel,.advanced-acquisition>.generated-route-review{margin:1rem}
+.metric-help{margin-top:1rem;padding:.85rem 1rem;border:1px solid var(--border,#d7ddd9);border-radius:.75rem;background:rgba(255,255,255,.04)}.metric-help summary{cursor:pointer;font-weight:700}.metric-help p{margin:.65rem 0 0;line-height:1.5}

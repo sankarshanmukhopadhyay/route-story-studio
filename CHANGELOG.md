@@ -1,5 +1,12 @@
 # Changelog
 
+### Fixed
+
+- Clarified elevation terminology throughout the interface and documentation.
+- Planned routes now display **Estimated ascent** while recorded tracks display **Elevation gain**.
+- Added elevation range, highest point and lowest point to the route summary.
+- Added a dedicated guide explaining cumulative ascent, elevation range and net elevation change.
+
 ## 0.3.0
 
 - Re-centred the product on the original GPX/KML-to-poster workflow.

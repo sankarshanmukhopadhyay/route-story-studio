@@ -2,6 +2,17 @@
 
 Route Story Studio is a local-first static web application that turns GPX and KML routes into shareable route posters.
 
+## Elevation terminology
+
+Route Story Studio distinguishes cumulative climbing from vertical span:
+
+- **Elevation gain** is cumulative uphill change for a recorded track.
+- **Estimated ascent** is cumulative uphill change for a planned or terrain-derived route.
+- **Elevation range** is highest point minus lowest point.
+- **Net elevation change** is finish elevation minus start elevation.
+
+The studio does not redefine elevation gain as elevation range. Planned-route ascent is labelled as estimated because dense or terrain-derived elevation samples can introduce cumulative noise. See `docs/elevation-metrics.html`.
+
 ## Start here
 
 1. Import a GPX or KML file.

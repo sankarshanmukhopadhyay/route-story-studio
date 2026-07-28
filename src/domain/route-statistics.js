@@ -21,10 +21,12 @@ export function calculateStatistics(input) {
   let distanceMetres = 0;
   let elevationGainMetres = 0;
   let elevationLossMetres = 0;
+  const elevations = [];
   const timed = [];
 
   for (const segment of segments) {
     const points = segment.points ?? [];
+    elevations.push(...points.map((point) => point.elevationMetres).filter(Number.isFinite));
     for (let index = 1; index < points.length; index += 1) {
       const previous = points[index - 1];
       const current = points[index];
@@ -40,7 +42,22 @@ export function calculateStatistics(input) {
 
   timed.sort((a, b) => a.timestamp - b.timestamp);
   const durationSeconds = timed.length > 1 ? Math.max(0, (timed.at(-1).timestamp - timed[0].timestamp) / 1000) : null;
-  return { distanceMetres, durationSeconds, elevationGainMetres, elevationLossMetres };
+  const minimumElevationMetres = elevations.length ? Math.min(...elevations) : null;
+  const maximumElevationMetres = elevations.length ? Math.max(...elevations) : null;
+  const elevationRangeMetres = elevations.length ? maximumElevationMetres - minimumElevationMetres : null;
+  const netElevationChangeMetres = elevations.length > 1 ? elevations.at(-1) - elevations[0] : null;
+  return { distanceMetres, durationSeconds, elevationGainMetres, elevationLossMetres, minimumElevationMetres, maximumElevationMetres, elevationRangeMetres, netElevationChangeMetres };
+}
+
+export function elevationMetricLabel(route) {
+  return route?.sourceType === 'planned-route' ? 'ESTIMATED ASCENT' : 'ELEVATION GAIN';
+}
+
+export function elevationMetricDescription(route) {
+  return route?.sourceType === 'planned-route'
+    ? 'Estimated ascent is the cumulative total of uphill changes in the route elevation data. It is not the difference between the highest and lowest points, and planned-route values may be sensitive to terrain-model noise.'
+    : 'Elevation gain is the cumulative total of uphill changes in the recorded elevation data. It is not the difference between the highest and lowest points.';
+
 }
 
 export function formatDistance(metres, units = 'metric') {
