@@ -1,0 +1,6 @@
+import { createSvgBlob } from './export-svg.js';
+import { downloadBlob, safeFileStem } from './download.js';
+import { exportDimensions } from './export-png.js';
+function canvasToJpeg(canvas,quality=.9){return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('JPEG generation failed.')),'image/jpeg',quality));}
+export async function createJpegBlob(svg,preset,scale=1){const {width,height}=exportDimensions(preset,scale);const url=URL.createObjectURL(createSvgBlob(svg));try{const image=new Image();await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('JPEG rendering timed out.')),12000);image.onload=()=>{clearTimeout(timer);resolve();};image.onerror=()=>{clearTimeout(timer);reject(new Error('The SVG could not be rasterised.'));};image.src=url;});const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas export is unavailable in this browser.');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,width,height);ctx.drawImage(image,0,0,width,height);return canvasToJpeg(canvas);}finally{URL.revokeObjectURL(url);}}
+export async function downloadJpeg(svg,preset,scale,title,layout){downloadBlob(await createJpegBlob(svg,preset,scale),`${safeFileStem(title)}-${layout}${scale===2?'-2x':''}.jpg`);}

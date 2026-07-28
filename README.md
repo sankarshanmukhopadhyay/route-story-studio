@@ -91,3 +91,8 @@ MIT. See [LICENSE](LICENSE).
 - Solid-colour and photo modes make no external map request.
 
 See [Photo and map backgrounds](docs/backgrounds.html).
+
+
+## v0.2.0 composition increment
+
+The current development line adds route-aware map fitting, an explicit map-consent gate, Editorial and Expedition templates, A4 and Letter print layouts, route-linked annotations and JPEG export. Selecting a map background now brings the consent action into view and prevents export until the map is loaded or another background is selected.

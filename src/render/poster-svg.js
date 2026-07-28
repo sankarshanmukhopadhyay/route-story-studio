@@ -1,76 +1,14 @@
 import { formatDistance, formatDuration, formatElevation } from '../domain/route-statistics.js';
 import { LAYOUT_PRESETS } from './layout-presets.js';
-
-export const MAX_RENDER_POINTS = 6_000;
-export const MAX_ELEVATION_POINTS = 2_000;
-
-function escapeXml(value) { return String(value).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[c]); }
-function allPoints(route) { return route.segments.flatMap((segment) => segment.points); }
-function clamp(number, minimum, maximum) { return Math.min(Math.max(Number(number) || minimum, minimum), maximum); }
-function safeColour(value, fallback) { return /^#[0-9a-f]{6}$/i.test(String(value)) ? value : fallback; }
-
-export function samplePoints(points, maximum) {
-  if (points.length <= maximum) return points;
-  const sampled = [];
-  const step = (points.length - 1) / (maximum - 1);
-  for (let index = 0; index < maximum; index += 1) sampled.push(points[Math.round(index * step)]);
-  return sampled;
-}
-
-function bounds(points) {
-  let minLat = Infinity; let maxLat = -Infinity; let minLon = Infinity; let maxLon = -Infinity;
-  for (const point of points) {
-    minLat = Math.min(minLat, point.latitude); maxLat = Math.max(maxLat, point.latitude);
-    minLon = Math.min(minLon, point.longitude); maxLon = Math.max(maxLon, point.longitude);
-  }
-  return { minLat, maxLat, minLon, maxLon };
-}
-
-function renderSegments(route) {
-  const total = route.segments.reduce((sum, segment) => sum + segment.points.length, 0);
-  return route.segments.map((segment) => ({ ...segment, points: samplePoints(segment.points, Math.max(2, Math.floor(MAX_RENDER_POINTS * segment.points.length / total))) }));
-}
-
-function mapSegments(route, box) {
-  const renderable = renderSegments(route);
-  const b = bounds(allPoints(route));
-  const lonSpan = Math.max(b.maxLon - b.minLon, .000001); const latSpan = Math.max(b.maxLat - b.minLat, .000001);
-  const scale = Math.min(box.width / lonSpan, box.height / latSpan);
-  const offsetX = box.x + (box.width - lonSpan * scale) / 2; const offsetY = box.y + (box.height - latSpan * scale) / 2;
-  return renderable.map((segment) => segment.points.map((p) => ({ x: offsetX + (p.longitude - b.minLon) * scale, y: offsetY + (b.maxLat - p.latitude) * scale })));
-}
-function path(points) { return points.map((p, i) => `${i ? 'L' : 'M'} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' '); }
-function elevationPath(points, box) {
-  const usable = samplePoints(points.filter((p) => Number.isFinite(p.elevationMetres)), MAX_ELEVATION_POINTS); if (usable.length < 2) return '';
-  let min = Infinity; let max = -Infinity;
-  for (const point of usable) { min = Math.min(min, point.elevationMetres); max = Math.max(max, point.elevationMetres); }
-  const span = Math.max(max - min, 1);
-  return usable.map((p, i) => `${i ? 'L' : 'M'} ${(box.x + i / (usable.length - 1) * box.width).toFixed(2)} ${(box.y + box.height - (p.elevationMetres - min) / span * box.height).toFixed(2)}`).join(' ');
-}
-
-export function createPosterSvg(options) {
-  const { route, statistics, title, subtitle, showElevation = true, showDuration = true, showMarkers = true, units = 'metric', layout = 'portrait' } = options;
-  const lineWidth = clamp(options.lineWidth, 2, 14);
-  const routeColor = safeColour(options.routeColor, '#f7f3e9'); const backgroundColor = safeColour(options.backgroundColor, '#0b0f0c'); const textColor = safeColour(options.textColor, '#f5f1e8');
-  const background = options.background && typeof options.background === 'object' ? options.background : { mode: 'solid' };
-  const backgroundOpacity = clamp(background.opacity ?? 1, 0.1, 1); const overlayOpacity = clamp(background.overlayOpacity ?? 0.18, 0, 0.8);
-  const preset = LAYOUT_PRESETS[layout] ?? LAYOUT_PRESETS.portrait; const landscape = layout === 'landscape';
-  const mappedSegments = mapSegments(route, preset.routeBox); const points = allPoints(route);
-  const elevationBox = landscape ? { x: 1060, y: 500, width: 450, height: 95 } : { x: 90, y: preset.elevationY, width: 900, height: 100 };
-  const elevation = elevationPath(points, elevationBox);
-  const stats = [{ value: formatDistance(statistics.distanceMetres, units), label: 'DISTANCE' }, { value: formatElevation(statistics.elevationGainMetres, units), label: 'ELEVATION GAIN' }, ...(showDuration && Number.isFinite(statistics.durationSeconds) ? [{ value: formatDuration(statistics.durationSeconds), label: 'DURATION' }] : [])];
-  const statsX = landscape ? 1060 : 90; const statsWidth = landscape ? 450 : 900;
-  const statMarkup = stats.map((stat, index) => `<g transform="translate(${statsX + index * statsWidth / stats.length} 0)"><text y="${preset.statsY}" class="stat-value">${escapeXml(stat.value)}</text><text y="${preset.statsY + 35}" class="stat-label">${stat.label}</text></g>`).join('');
-  const segmentMarkup = mappedSegments.map((segment) => `<path d="${path(segment)}" fill="none" stroke="${routeColor}" stroke-width="${lineWidth}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
-  const first = mappedSegments[0][0]; const last = mappedSegments.at(-1).at(-1); const titleX = landscape ? 1060 : 90; const titleSize = landscape ? 62 : 72;
-  const imageMarkup = background.mode !== 'solid' && /^data:image\/(?:png|jpeg|webp);base64,/.test(String(background.dataUrl || '')) ? `<image href="${background.dataUrl}" x="0" y="0" width="${preset.width}" height="${preset.height}" preserveAspectRatio="xMidYMid slice" opacity="${backgroundOpacity}"/><rect width="100%" height="100%" fill="${backgroundColor}" opacity="${overlayOpacity}"/>` : '';
-  const attribution = background.mode === 'map' && background.attribution ? `<text x="${preset.width - 24}" y="${preset.height - 18}" text-anchor="end" font-size="13" opacity=".75">${escapeXml(background.attribution)}</text>` : '';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${preset.width} ${preset.height}" role="img" aria-label="Route poster for ${escapeXml(title)}">
-<style>text{font-family:Inter,Arial,sans-serif;fill:${textColor}}.eyebrow{font-size:17px;font-weight:700;letter-spacing:4px;fill:#86c8aa}.title{font-size:${titleSize}px;font-weight:800;letter-spacing:-2px}.subtitle{font-size:25px;opacity:.72}.stat-value{font-size:34px;font-weight:800}.stat-label{font-size:13px;font-weight:700;letter-spacing:2px;opacity:.7}</style>
-<rect width="100%" height="100%" fill="${backgroundColor}"/>${imageMarkup}<circle cx="${preset.width * .88}" cy="${preset.height * .12}" r="${preset.height * .16}" fill="#ef8f4c" opacity=".08"/>
-<text x="${titleX}" y="70" class="eyebrow">ROUTE STORY</text>${segmentMarkup}
-${showMarkers ? `<circle cx="${first.x}" cy="${first.y}" r="11" fill="#7bc4a4" stroke="#0d120f" stroke-width="4"/><circle cx="${last.x}" cy="${last.y}" r="11" fill="#ef8f4c" stroke="#0d120f" stroke-width="4"/>` : ''}
-<text x="${titleX}" y="${preset.titleY}" class="title">${escapeXml(String(title).slice(0, 80))}</text><text x="${titleX}" y="${preset.titleY + 48}" class="subtitle">${escapeXml(String(subtitle || route.source.name).slice(0, 120))}</text>
-${showElevation && elevation ? `<text x="${elevationBox.x}" y="${elevationBox.y - 20}" class="eyebrow">ELEVATION PROFILE</text><path d="${elevation}" fill="none" stroke="${routeColor}" stroke-width="4" stroke-linecap="round"/>` : ''}${statMarkup}
-<text x="${titleX}" y="${preset.height - 45}" class="subtitle" font-size="16">Created locally with Route Story Studio · ${escapeXml(route.sourceType === 'planned-route' ? 'planned route' : 'recorded track')}</text>${attribution}</svg>`;
-}
+export const MAX_RENDER_POINTS=6000,MAX_ELEVATION_POINTS=2000;
+const esc=v=>String(v).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
+const allPoints=r=>r.segments.flatMap(s=>s.points);const clamp=(n,a,b)=>Math.min(Math.max(Number(n)||a,a),b);const colour=(v,f)=>/^#[0-9a-f]{6}$/i.test(String(v))?v:f;
+export function samplePoints(points,max){if(points.length<=max)return points;const out=[],step=(points.length-1)/(max-1);for(let i=0;i<max;i++)out.push(points[Math.round(i*step)]);return out;}
+function routeBounds(points){return points.reduce((b,p)=>({minLat:Math.min(b.minLat,p.latitude),maxLat:Math.max(b.maxLat,p.latitude),minLon:Math.min(b.minLon,p.longitude),maxLon:Math.max(b.maxLon,p.longitude)}),{minLat:Infinity,maxLat:-Infinity,minLon:Infinity,maxLon:-Infinity});}
+function renderSegments(route){const total=route.segments.reduce((s,v)=>s+v.points.length,0);return route.segments.map(s=>({...s,points:samplePoints(s.points,Math.max(2,Math.floor(MAX_RENDER_POINTS*s.points.length/total)))}));}
+function mercatorY(lat){const r=Math.max(-85.0511,Math.min(85.0511,lat))*Math.PI/180;return Math.log(Math.tan(Math.PI/4+r/2));}
+function mapSegments(route,box,geoBounds=null){const b=geoBounds||routeBounds(allPoints(route));if(geoBounds){const lonSpan=Math.max(b.maxLon-b.minLon,.000001),top=mercatorY(b.maxLat),bottom=mercatorY(b.minLat),ySpan=Math.max(top-bottom,.000001);return renderSegments(route).map(s=>s.points.map(p=>({x:box.x+(p.longitude-b.minLon)/lonSpan*box.width,y:box.y+(top-mercatorY(p.latitude))/ySpan*box.height})));}const lonSpan=Math.max(b.maxLon-b.minLon,.000001),latSpan=Math.max(b.maxLat-b.minLat,.000001);const scale=Math.min(box.width/lonSpan,box.height/latSpan),ox=box.x+(box.width-lonSpan*scale)/2,oy=box.y+(box.height-latSpan*scale)/2;return renderSegments(route).map(s=>s.points.map(p=>({x:ox+(p.longitude-b.minLon)*scale,y:oy+(b.maxLat-p.latitude)*scale})));}
+const path=p=>p.map((v,i)=>`${i?'L':'M'} ${v.x.toFixed(2)} ${v.y.toFixed(2)}`).join(' ');
+function elevationPath(points,box){const usable=samplePoints(points.filter(p=>Number.isFinite(p.elevationMetres)),MAX_ELEVATION_POINTS);if(usable.length<2)return'';let min=Infinity,max=-Infinity;for(const p of usable){min=Math.min(min,p.elevationMetres);max=Math.max(max,p.elevationMetres);}const span=Math.max(max-min,1);return usable.map((p,i)=>`${i?'L':'M'} ${(box.x+i/(usable.length-1)*box.width).toFixed(2)} ${(box.y+box.height-(p.elevationMetres-min)/span*box.height).toFixed(2)}`).join(' ');}
+function annotationMarkup(annotations,segments){const flattened=segments.flat();return (annotations||[]).slice(0,500).map((a,i)=>{const ratio=clamp(a.positionPercent??50,0,100)/100;const p=flattened[Math.min(flattened.length-1,Math.round(ratio*(flattened.length-1)))];if(!p)return'';return `<g><circle cx="${p.x}" cy="${p.y}" r="8" fill="#ef8f4c" stroke="#111" stroke-width="3"/><text x="${p.x+14}" y="${p.y-12}" class="annotation">${esc(String(a.label||`Stop ${i+1}`).slice(0,60))}</text></g>`;}).join('');}
+export function createPosterSvg(options){const {route,statistics,title,subtitle,showElevation=true,showDuration=true,showMarkers=true,units='metric',layout='portrait',annotations=[]}=options;const preset=LAYOUT_PRESETS[layout]??LAYOUT_PRESETS.portrait;const background=options.background&&typeof options.background==='object'?options.background:{mode:'solid'};const lineWidth=clamp(options.lineWidth,2,14),routeColor=colour(options.routeColor,'#f7f3e9'),backgroundColor=colour(options.backgroundColor,'#0b0f0c'),textColor=colour(options.textColor,'#f5f1e8');const bgOpacity=clamp(background.opacity??1,.1,1),overlay=clamp(background.overlayOpacity??.18,0,.8);const landscape=layout==='landscape';const mapped=mapSegments(route,preset.routeBox,background.mode==='map'?background.geoBounds:null),points=allPoints(route);const elevationBox=landscape?{x:1060,y:500,width:450,height:95}:{x:preset.width*.083,y:preset.elevationY,width:preset.width*.834,height:preset.height*.074};const elevation=elevationPath(points,elevationBox);const stats=[{value:formatDistance(statistics.distanceMetres,units),label:'DISTANCE'},{value:formatElevation(statistics.elevationGainMetres,units),label:'ELEVATION GAIN'},...(showDuration&&Number.isFinite(statistics.durationSeconds)?[{value:formatDuration(statistics.durationSeconds),label:'DURATION'}]:[])];const titleX=landscape?1060:preset.width*.083,statsX=titleX,statsWidth=landscape?450:preset.width*.834,titleSize=preset.width>2000?145:layout==='landscape'?62:72;const validImage=background.mode!=='solid'&&/^data:image\/(?:png|jpeg|webp);base64,/.test(String(background.dataUrl||''));const image=validImage?(background.mode==='map'?`<image href="${background.dataUrl}" x="${preset.routeBox.x}" y="${preset.routeBox.y}" width="${preset.routeBox.width}" height="${preset.routeBox.height}" preserveAspectRatio="none" opacity="${bgOpacity}"/><rect x="${preset.routeBox.x}" y="${preset.routeBox.y}" width="${preset.routeBox.width}" height="${preset.routeBox.height}" fill="${backgroundColor}" opacity="${overlay}"/>`:`<image href="${background.dataUrl}" x="0" y="0" width="${preset.width}" height="${preset.height}" preserveAspectRatio="xMidYMid slice" opacity="${bgOpacity}"/><rect width="100%" height="100%" fill="${backgroundColor}" opacity="${overlay}"/>`):'';const segmentMarkup=mapped.map(s=>`<path d="${path(s)}" fill="none" stroke="${routeColor}" stroke-width="${lineWidth*(preset.width/1080)}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');const first=mapped[0]?.[0],last=mapped.at(-1)?.at(-1);const statMarkup=stats.map((s,i)=>`<g transform="translate(${statsX+i*statsWidth/stats.length} 0)"><text y="${preset.statsY}" class="stat-value">${esc(s.value)}</text><text y="${preset.statsY+35*(preset.width/1080)}" class="stat-label">${s.label}</text></g>`).join('');const attribution=background.mode==='map'&&background.attribution?`<text x="${preset.width-24}" y="${preset.height-18}" text-anchor="end" class="attribution">${esc(background.attribution)}</text>`:'';return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${preset.width} ${preset.height}" role="img" aria-label="Route poster for ${esc(title)}"><style>text{font-family:Inter,Arial,sans-serif;fill:${textColor}}.eyebrow{font-size:${17*(preset.width/1080)}px;font-weight:700;letter-spacing:${4*(preset.width/1080)}px;fill:#86c8aa}.title{font-size:${titleSize}px;font-weight:800;letter-spacing:-2px}.subtitle{font-size:${25*(preset.width/1080)}px;opacity:.8}.stat-value{font-size:${34*(preset.width/1080)}px;font-weight:800}.stat-label{font-size:${13*(preset.width/1080)}px;font-weight:700;letter-spacing:2px;opacity:.75}.annotation{font-size:${18*(preset.width/1080)}px;font-weight:700;paint-order:stroke;stroke:${backgroundColor};stroke-width:5px}.attribution{font-size:${13*(preset.width/1080)}px;opacity:.8}</style><rect width="100%" height="100%" fill="${backgroundColor}"/>${image}${background.mode==='solid'?`<circle cx="${preset.width*.88}" cy="${preset.height*.12}" r="${preset.height*.16}" fill="#ef8f4c" opacity=".08"/>`:''}<text x="${titleX}" y="${70*(preset.width/1080)}" class="eyebrow">ROUTE STORY</text>${segmentMarkup}${showMarkers&&first&&last?`<circle cx="${first.x}" cy="${first.y}" r="${11*(preset.width/1080)}" fill="#7bc4a4" stroke="#0d120f" stroke-width="4"/><circle cx="${last.x}" cy="${last.y}" r="${11*(preset.width/1080)}" fill="#ef8f4c" stroke="#0d120f" stroke-width="4"/>`:''}${annotationMarkup(annotations,mapped)}<text x="${titleX}" y="${preset.titleY}" class="title">${esc(String(title).slice(0,80))}</text><text x="${titleX}" y="${preset.titleY+48*(preset.width/1080)}" class="subtitle">${esc(String(subtitle||route.source.name).slice(0,120))}</text>${showElevation&&elevation?`<text x="${elevationBox.x}" y="${elevationBox.y-20*(preset.width/1080)}" class="eyebrow">ELEVATION PROFILE</text><path d="${elevation}" fill="none" stroke="${routeColor}" stroke-width="${4*(preset.width/1080)}" stroke-linecap="round"/>`:''}${statMarkup}<text x="${titleX}" y="${preset.height-45*(preset.width/1080)}" class="subtitle">Created locally with Route Story Studio · ${esc(route.sourceType==='planned-route'?'planned route':'recorded track')}</text>${attribution}</svg>`;}

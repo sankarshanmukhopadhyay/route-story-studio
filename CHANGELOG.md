@@ -58,3 +58,12 @@ The release does not include a geographic map background, geometry editing, phot
 - Background opacity and overlay controls.
 - Mandatory map attribution in route-story output.
 - Documentation and automated boundary tests for background processing.
+
+### Added — v0.2.0 development, publication composition
+
+- Route-bounds-aware OpenStreetMap tile fitting and shared geographic projection.
+- Prominent, focused map consent step with export gating until map load completes.
+- Editorial Photo, Expedition Log, A4 and Letter layouts.
+- Route-linked annotations with a 500-item limit.
+- Local JPEG export alongside SVG and PNG.
+- Documentation for templates, annotations and print output.
