@@ -82,7 +82,7 @@ test('reveals provider resolution in sequence after route-intent review', async 
   await page.getByRole('button', { name: 'Review route intent' }).click();
   await expect(page.locator('#provider-panel')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Resolve named places' })).toBeFocused();
-  await expect(page.locator('#story-controls')).toBeDisabled();
+  await expect(page.locator('#story-controls')).toHaveAttribute('disabled', '');
 });
 
 test('exposes bounded map zoom controls after map mode selection', async ({ page }) => {

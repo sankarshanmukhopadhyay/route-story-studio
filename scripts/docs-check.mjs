@@ -14,7 +14,11 @@ for (const file of files) {
     const target = resolve(dirname(path), href.split('#')[0]);
     try { await access(target); } catch { errors.push(`${file}: broken link ${href}`); }
   }
-  if (!html.includes('<nav class="nav"') || !html.includes('class="next"')) errors.push(`${file}: missing documentation navigation`);
+  const contracts = [/<header[^>]*class="top"/, /<div[^>]*class="shell"/, /<nav[^>]*class="nav"/, /<main[^>]*class="content"/];
+  for (const contract of contracts) if (!contract.test(html)) errors.push(`${file}: missing shared documentation layout`);
+  const currentPagePattern = new RegExp(`<a(?=[^>]*href=\"${file.replace('.', '\\.')}\")(?=[^>]*aria-current=\"page\")[^>]*>`);
+  if (!currentPagePattern.test(html)) errors.push(`${file}: current page is not identified in navigation`);
+  if (!html.includes('class="next"')) errors.push(`${file}: missing previous/next documentation navigation`);
 }
 if (errors.length) throw new Error(errors.join('\n'));
-console.log(`Documentation checks passed for ${files.length} pages.`);
+console.log(`Documentation checks passed for ${files.length} pages and their shared layout contract.`);
