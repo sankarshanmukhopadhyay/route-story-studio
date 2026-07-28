@@ -1,30 +1,35 @@
 # Route Story Studio
 
-**Route Story Studio v0.1.0** turns GPX and KML routes into clean, shareable route images directly in the browser.
+**Route Story Studio v0.2.0** turns GPX and KML routes into reusable, publication-ready route stories directly in the browser.
 
 [Open the live studio](https://sankarshanmukhopadhyay.github.io/route-story-studio/) · [Read the user guide](https://sankarshanmukhopadhyay.github.io/route-story-studio/docs/)
 
-> **Local-first:** route parsing, statistics, visualisation and image export happen on the user's device. The application has no route upload endpoint, account, analytics service, map-tile request or cloud persistence.
+> **Local-first by default:** route parsing, statistics, photographs, projects, annotations and image export happen on the user's device. Map tiles are requested only after explicit consent.
 
 ## What you can do
 
-1. Import GPX 1.0/1.1 or KML 2.2-compatible route geometry.
-2. Review distance, duration, elevation and import warnings.
-3. Choose portrait, square or landscape output.
-4. Adjust units, colours, route width and visible details.
-5. Save the project locally, export a portable `.rssproj` file, or download SVG/PNG.
+1. Import GPX or supported KML route geometry.
+2. Review distance, duration, elevation and provenance.
+3. Save work locally or exchange a portable `.rssproj` project.
+4. Add a solid, photograph or consent-based map background.
+5. Choose social, editorial, expedition or print-oriented layouts.
+6. Add route-relative annotations.
+7. Export SVG, PNG or JPEG.
 
-A sample route is included, so the application can be explored without supplying personal location data.
+A sample route is included, so the studio can be explored without supplying personal location data.
 
 ## Documentation
 
 | Need | Guide |
 |---|---|
-| Create a first route image | [Getting started](docs/getting-started.html) |
-| Check whether a route file is supported | [Supported GPX](docs/supported-gpx.html) and [Supported KML](docs/supported-kml.html) |
-| Save or reopen a route story | [Local projects](docs/local-projects.html) |
-| Choose SVG or PNG | [Exporting images](docs/exporting-images.html) |
-| Understand local processing | [Privacy model](docs/privacy-model.html) |
+| Create a first route story | [Getting started](docs/getting-started.html) |
+| Check route-file support | [Supported GPX](docs/supported-gpx.html) and [Supported KML](docs/supported-kml.html) |
+| Save or reopen work | [Local projects](docs/local-projects.html) |
+| Use photographs or maps | [Backgrounds](docs/backgrounds.html) |
+| Understand consent, blocked tiles and map recovery | [Map backgrounds](docs/map-backgrounds.html) |
+| Choose layouts and annotations | [Templates and annotations](docs/templates-and-annotations.html) |
+| Export for web or print | [Exporting images](docs/exporting-images.html) |
+| Understand data handling | [Privacy model](docs/privacy-model.html) |
 | Review safety controls | [Security model](docs/security-model.html) |
 | Understand the release boundary | [Known limitations](docs/known-limitations.html) |
 | Verify release readiness | [Release checklist](docs/release-checklist.html) |
@@ -35,12 +40,28 @@ A sample route is included, so the application can be explored without supplying
 - KML 2.2-compatible `LineString`, `Point` placemarks and `gx:Track`
 - Tracks, routes and multiple segments
 - Optional elevation and timestamps
-- Maximum file size: **8 MB**
+- Maximum route file: **8 MB**
 - Maximum route points: **100,000**
-- Maximum tracks, routes and segments: **2,000**
+- Maximum segments/features: **2,000**
+- Maximum photograph: **5 MB / 40 megapixels**
+- Maximum map request: **9 tiles**
 - DTD and entity declarations are rejected
 
 A planned route is labelled as planned geometry. It is not represented as evidence that a journey occurred.
+
+## Map usage
+
+Map mode requires an explicit **Consent and load map now** action. Route Story Studio:
+
+- uses the official OpenStreetMap HTTPS tile URL;
+- sends a valid website Referer;
+- uses ordinary browser caching;
+- limits concurrency and request rate;
+- keeps attribution visible;
+- rejects HTTP 403 and recognisable blocked-tile responses;
+- prevents export while a requested map is unavailable.
+
+OpenStreetMap's standard tile service is best-effort. A solid colour or imported photograph provides a fully local fallback.
 
 ## Development
 
@@ -59,40 +80,22 @@ npm run test:e2e:install
 npm run test:e2e
 ```
 
-The browser suite covers Chromium, Firefox, WebKit and a mobile Chromium viewport. It also checks for serious or critical automated accessibility violations.
-
 ## Deployment
 
-GitHub Pages deploys the contents of `dist/` after validation succeeds. Configure:
-
-**Settings → Pages → Build and deployment → GitHub Actions**
+GitHub Pages deploys `dist/` after validation succeeds. Configure **Settings → Pages → Build and deployment → GitHub Actions**.
 
 For Dependabot auto-merge, follow [the repository setup guide](docs/dependabot-auto-merge.md).
 
 ## Security and privacy
 
-Do not place private route data in public issues. See [SECURITY.md](SECURITY.md) for responsible reporting and [PRIVACY.md](PRIVACY.md) for the formal privacy boundary.
+Do not place private route data in public issues. See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
 
 ## Roadmap
 
-- `v0.2.0`: reusable local projects, KML support, image/map backgrounds and richer composition
+- `v0.2.0`: route composition, local projects, KML, backgrounds, annotations and publication exports
 - `v0.3.0`: provenance-aware map-link-to-GPX conversion through provider adapters
+- `v0.4.0`: timelines, route animation and richer storytelling
 
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
-
-## v0.2.0 development: contextual backgrounds
-
-- Add local JPEG, PNG or WebP photo backgrounds.
-- Choose map mode only after an explicit disclosure and consent step.
-- Map loading is limited to nine OpenStreetMap tiles with response-size and timeout controls.
-- Map attribution is included in generated artefacts.
-- Solid-colour and photo modes make no external map request.
-
-See [Photo and map backgrounds](docs/backgrounds.html).
-
-
-## v0.2.0 composition increment
-
-The current development line adds route-aware map fitting, an explicit map-consent gate, Editorial and Expedition templates, A4 and Letter print layouts, route-linked annotations and JPEG export. Selecting a map background now brings the consent action into view and prevents export until the map is loaded or another background is selected.

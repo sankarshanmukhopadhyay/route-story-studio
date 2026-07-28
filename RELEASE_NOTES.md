@@ -1,43 +1,41 @@
-# Route Story Studio v0.1.0 — Local GPX Studio
+# Route Story Studio v0.2.0 — Route Composition Studio
 
-Route Story Studio is a local-first browser application for turning GPX tracks and routes into configurable, shareable route-story images.
+Route Story Studio v0.2.0 expands the local-first route workflow into a reusable composition environment for GPX and KML routes.
 
 ## Highlights
 
-- Import GPX 1.0 and GPX 1.1 files directly in the browser.
-- Preserve multiple tracks, routes and segment boundaries.
-- Calculate distance, elapsed duration, elevation gain and elevation loss.
-- Choose portrait, square or landscape layouts.
-- Customise titles, colours, route width, units and visible statistics.
-- Export route stories as SVG, standard-resolution PNG or high-resolution PNG.
-- Start immediately with the included sample route.
+- Import GPX 1.0/1.1 and supported KML 2.2 route structures.
+- Save projects in the browser and exchange portable `.rssproj` project files.
+- Add validated JPEG, PNG or WebP photo backgrounds without uploading them.
+- Add consent-based, route-aligned OpenStreetMap backgrounds.
+- Choose portrait, square, landscape, editorial, expedition, A4 and Letter layouts.
+- Add route-relative annotations that survive layout changes.
+- Export SVG, PNG and JPEG outputs.
+- Preserve route provenance and map attribution in saved projects and generated artefacts.
 
-## Privacy model
+## Map-provider reliability and policy alignment
 
-GPX parsing, analysis and image generation happen locally in the browser. This release does not include route uploads, accounts, analytics, cloud storage, external map tiles or external routing requests.
+The map workflow now sends a web-compatible Referer, uses the official HTTPS tile URL, preserves browser caching, limits each composition to nine tiles, loads at most two tiles concurrently and paces requests. It does not prefetch zoom levels or build offline tile archives.
+
+The studio detects HTTP 403 responses and the standard OpenStreetMap blocked-tile image. Blocked responses are rejected before composition so they cannot be embedded in exported route stories. The interface presents recovery links to the OpenStreetMap blocked-tiles guidance, tile usage policy and project issue tracker.
+
+## Privacy
+
+GPX, KML, project, photograph, annotation and export processing remain in the browser. Map mode is the only feature that initiates a third-party network request, and it does so only after explicit user consent. The request discloses the visible route area, website origin and ordinary network metadata to the selected provider.
 
 ## Security and availability controls
 
-The release rejects DTD and entity declarations and enforces bounded processing limits, including an 8 MB GPX file limit, 100,000 route points and 2,000 segments or routes. Rendering and PNG export are also bounded to reduce browser overload and resource-exhaustion risk.
-
-## Supported input
-
-The release supports common GPX 1.0 and GPX 1.1 files containing tracks, multiple track segments, routes, optional elevation and optional timestamps. Malformed files, invalid coordinates and inputs above the documented limits are rejected with an explanatory error.
+The release includes bounded route, project, image, map and export processing; DTD/entity rejection; coordinate validation; image pixel limits; project schema validation; map request timeouts; tile response-size limits; blocked-tile detection; rendering budgets; and browser-level accessibility assurance.
 
 ## Known limitations
 
-- No geographic map background.
-- No route-geometry editor.
-- No photograph background or waypoint annotation interface.
-- No project persistence or cloud synchronisation.
-- No external elevation correction.
-- No Google Maps link-to-GPX conversion in this release.
-- Planned GPX routes are not evidence that a journey was completed.
+- Route geometry cannot yet be edited.
+- Google Maps links cannot yet be converted into GPX.
+- Projects do not synchronise across devices automatically.
+- OpenStreetMap's standard tile service is best-effort and may be unavailable or blocked.
+- Offline map packages are not supported.
+- Animated route export remains deferred.
 
 ## Assurance
 
 The release pipeline runs structural, security, documentation and unit checks; builds and smoke-tests the static site; and exercises the core workflow in Chromium, Firefox, WebKit and a mobile Chromium viewport. It also checks for serious and critical automated accessibility violations.
-
-## Documentation
-
-The deployed application includes a guided documentation site covering first use, supported GPX input, image export, privacy, security, browser support and known limitations.

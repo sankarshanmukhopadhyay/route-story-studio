@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing release tag to publish or repair, for example v0.1.0
+        description: Existing release tag to publish or repair, for example v0.2.0
         required: true
         type: string
 
@@ -73,7 +73,7 @@ jobs:
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release edit "$RELEASE_TAG" \
-              --title "Route Story Studio $RELEASE_TAG: Local GPX Studio" \
+              --title "Route Story Studio $RELEASE_TAG: Route Composition Studio" \
               --notes-file RELEASE_NOTES.md
             gh release upload "$RELEASE_TAG" \
               "route-story-studio-${RELEASE_TAG}.tar.gz" \
@@ -82,7 +82,7 @@ jobs:
               --clobber
           else
             gh release create "$RELEASE_TAG" \
-              --title "Route Story Studio $RELEASE_TAG: Local GPX Studio" \
+              --title "Route Story Studio $RELEASE_TAG: Route Composition Studio" \
               --notes-file RELEASE_NOTES.md \
               "route-story-studio-${RELEASE_TAG}.tar.gz" \
               SBOM.spdx.json \

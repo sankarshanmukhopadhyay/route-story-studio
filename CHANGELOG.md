@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 - 2026-07-28
+
+### Added
+- KML `LineString`, `Point` and `gx:Track` import alongside GPX.
+- Local IndexedDB projects and portable `.rssproj` exchange.
+- Validated photo backgrounds and explicit-consent map backgrounds.
+- Route-aware map fitting, publication templates, annotations and JPEG export.
+- User-facing map help covering provider policy, blocked tiles and recovery.
+
+### Changed
+- Map requests now use `strict-origin-when-cross-origin`, normal browser caching, bounded concurrency and request pacing.
+- Release identity updated to Route Composition Studio v0.2.0.
+
+### Fixed
+- Prevented OpenStreetMap blocked-tile notices from being embedded into exported posters.
+- Added detection for HTTP 403 responses and the standard blocked-tile image.
+- Added an explicit fallback state that keeps export disabled until a valid map is loaded or another background is selected.
+
 All notable changes to Route Story Studio are documented here.
 
 ## Unreleased

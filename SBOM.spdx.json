@@ -2,17 +2,19 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "route-story-studio-v0.1.0",
-  "documentNamespace": "https://github.com/sankarshanmukhopadhyay/route-story-studio/sbom/v0.1.0",
+  "name": "route-story-studio-v0.2.0",
+  "documentNamespace": "https://github.com/sankarshanmukhopadhyay/route-story-studio/sbom/v0.2.0",
   "creationInfo": {
     "created": "2026-07-28T00:00:00Z",
-    "creators": ["Tool: Route Story Studio release process"]
+    "creators": [
+      "Tool: Route Story Studio release process"
+    ]
   },
   "packages": [
     {
       "SPDXID": "SPDXRef-Package",
       "name": "route-story-studio",
-      "versionInfo": "0.1.0",
+      "versionInfo": "0.2.0",
       "downloadLocation": "https://github.com/sankarshanmukhopadhyay/route-story-studio",
       "filesAnalyzed": false,
       "licenseConcluded": "MIT",
@@ -39,8 +41,20 @@
     }
   ],
   "relationships": [
-    {"spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-Package"},
-    {"spdxElementId": "SPDXRef-Package", "relationshipType": "DEV_DEPENDENCY_OF", "relatedSpdxElement": "SPDXRef-PlaywrightTest"},
-    {"spdxElementId": "SPDXRef-Package", "relationshipType": "DEV_DEPENDENCY_OF", "relatedSpdxElement": "SPDXRef-AxeCore"}
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEV_DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-PlaywrightTest"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package",
+      "relationshipType": "DEV_DEPENDENCY_OF",
+      "relatedSpdxElement": "SPDXRef-AxeCore"
+    }
   ]
 }

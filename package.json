@@ -1,9 +1,9 @@
 {
   "name": "route-story-studio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Local-first GPX and KML route visualisation, project persistence and story export studio.",
+  "description": "Local-first GPX and KML route composition studio with reusable projects, contextual backgrounds, annotations and publication exports.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",

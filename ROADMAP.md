@@ -1,23 +1,13 @@
 # Roadmap
 
-## v0.1.0: Local GPX Studio
+## v0.2.0 — Route Composition Studio
 
-Released baseline: local GPX import, validation, statistics, configurable route-story layouts, SVG/PNG export, overload controls, browser assurance and user documentation.
+Delivered: GPX and KML import, local projects, portable project files, photo and consent-based map backgrounds, route-aligned map composition, publication templates, route-relative annotations, SVG/PNG/JPEG export, provider-policy hardening and guided documentation.
 
-## v0.2.0: Route Composition Studio
+## v0.3.0 — Route acquisition and interoperability
 
-- GPX and KML route import
-- Versioned local project save, reopen and portable project files
-- Optional photograph backgrounds
-- Optional map backgrounds with explicit provider disclosure
-- Additional layout templates
-- Local project save and restore
-- Waypoint annotations
+Planned: provider-neutral map-link parsing, geocoding and routing adapters, provenance-marked GPX generation, Google Maps URL support where route intent can be recovered, and explicit disclosure when a route is reconstructed rather than recorded.
 
-## v0.3.0: Map-link to GPX
+## v0.4.0 — Timelines and motion
 
-- Parse supported Google Maps direction links
-- Convert route intent through provider-neutral adapters
-- Export provenance-marked planned-route GPX
-- Make external routing disclosure explicit
-- Preserve the distinction between reconstructed and recorded geometry
+Planned: trip timelines, photo waypoints, animated route playback and richer story sequences.

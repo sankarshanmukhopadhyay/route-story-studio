@@ -42,3 +42,22 @@ test('has no serious or critical axe violations', async ({ page }) => {
   const blocking = results.violations.filter((item) => ['serious', 'critical'].includes(item.impact));
   expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
 });
+
+test('makes map consent discoverable and sends a website Referer', async ({ page }) => {
+  const tile = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+  let requests = 0;
+  await page.route('https://tile.openstreetmap.org/**', async (route) => {
+    requests += 1;
+    expect(route.request().headers().referer).toMatch(/^http:\/\/127\.0\.0\.1:4173\//);
+    await route.fulfill({ status: 200, contentType: 'image/png', body: tile, headers: { 'Cache-Control': 'public, max-age=604800' } });
+  });
+  await loadSample(page);
+  await page.locator('#background-mode').selectOption('map');
+  await expect(page.locator('#map-controls')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Consent and load map now' })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Download PNG' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Consent and load map now' }).click();
+  await expect(page.locator('#file-status')).toContainText('Map background loaded');
+  expect(requests).toBeGreaterThan(0);
+  await expect(page.getByRole('button', { name: 'Download PNG' })).toBeEnabled();
+});
