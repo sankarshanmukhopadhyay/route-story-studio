@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sankarshanmukhopadhyay.github.io/route-story-studio/schemas/route-generation-receipt.schema.json",
+  "title": "Route Generation Receipt",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "receiptId",
+    "generatedAt",
+    "sourceIntentHash",
+    "sourceType",
+    "routingProvider",
+    "requestSummary",
+    "geometry",
+    "warnings"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "receiptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceIntentHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sourceType": {
+      "type": "string"
+    },
+    "routingProvider": {
+      "type": "object"
+    },
+    "requestSummary": {
+      "type": "object"
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "pointCount"
+      ],
+      "properties": {
+        "pointCount": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100000
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

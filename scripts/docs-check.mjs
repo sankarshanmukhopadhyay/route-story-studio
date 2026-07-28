@@ -3,7 +3,7 @@ import { resolve, dirname } from 'node:path';
 
 const files = (await readdir('docs')).filter((name) => name.endsWith('.html'));
 const errors = [];
-const required = ['route-acquisition.html','routing-providers.html','map-backgrounds.html'];
+const required = ['route-acquisition.html','routing-providers.html','exporting-generated-routes.html','map-backgrounds.html'];
 for (const name of required) if (!files.includes(name)) errors.push(`missing required guide ${name}`);
 for (const file of files) {
   const path = resolve('docs', file);

@@ -42,6 +42,13 @@ All notable changes to Route Story Studio are documented here.
 
 ### Added
 
+- Reviewed export of provider-generated planned routes as GPX and KML.
+- Machine-readable route-generation provenance receipts with canonical intent hashes.
+- Material coordinate-displacement warnings and explicit reconstructed-route semantics.
+
+
+### Added
+
 - KML `LineString`, `Point` placemark and `gx:Track` import
 - Versioned Route Story project model
 - IndexedDB project save and reopen workflow
