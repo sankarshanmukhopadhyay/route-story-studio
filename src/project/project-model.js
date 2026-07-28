@@ -37,7 +37,7 @@ export function createProject({ route, composition, id = `project-${crypto.rando
     composition: { ...composition },
     media: [],
     annotations: [],
-    provenance: { application: 'Route Story Studio', applicationVersion: '0.1.0', localFirst: true }
+    provenance: { application: 'Route Story Studio', applicationVersion: '0.3.0-development', localFirst: true }
   };
 }
 

@@ -95,3 +95,13 @@ The release does not include a geographic map background, geometry editing, phot
 - Route-linked annotations with a 500-item limit.
 - Local JPEG export alongside SVG and PNG.
 - Documentation for templates, annotations and print output.
+
+## Unreleased — v0.3.0 development
+
+### Added
+- Provider-neutral geocoding and routing contracts with an openrouteservice adapter.
+- User-confirmed candidate selection for ambiguous named places.
+- Browser-local provider credential controls and a 20-request session budget.
+- Route reconstruction from confirmed map-link intent as a planned route.
+- Map zoom controls from wide context to closer route-centred views.
+- Re-sequenced workspace and comprehensive acquisition/provider documentation.

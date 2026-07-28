@@ -2,41 +2,53 @@
 
 ## Supported version
 
-The current development branch is supported until the first public release. Security fixes are applied to `main` and included in the next tagged release.
+The latest tagged release and the current `main` development branch receive security fixes.
 
 ## Reporting
 
-Do not disclose a suspected vulnerability through a public issue. Use GitHub's private vulnerability reporting feature when enabled, or contact the repository owner through the profile contact channel.
+Do not disclose a suspected vulnerability through a public issue and do not include private route data or API keys in reports. Use GitHub private vulnerability reporting when available, or contact the repository owner through the profile contact channel.
 
-Include reproduction steps, affected inputs, expected impact and any evidence that route data left the browser.
+## Processing and trust boundaries
 
-## Processing and trust boundary
+Route Story Studio separates three boundaries:
 
-GPX files are processed locally. The application has no upload endpoint, account system, analytics service, external map request or routing provider in the current scope.
+1. **Local browser processing:** GPX, KML, projects, photographs, composition and image export.
+2. **Explicit route acquisition:** named-place text and confirmed coordinates sent to the selected routing provider.
+3. **Explicit map loading:** visible route area requested from the selected tile provider.
 
-## Resource-exhaustion controls
+No account or analytics service is included.
 
-The application treats GPX input as untrusted data and enforces:
+## Route and document hardening
 
-- an 8 MB input limit;
-- a maximum of 100,000 route points;
-- a maximum of 2,000 segments or routes;
-- preflight point and segment counting before XML DOM construction;
-- rejection of XML document type and entity declarations;
-- coordinate validation;
-- bounded metadata lengths;
-- route-path sampling to at most 6,000 rendered points;
-- elevation sampling to at most 2,000 rendered points;
-- a maximum PNG pixel budget;
-- an export timeout and object-URL revocation;
-- render coalescing through `requestAnimationFrame`.
+- 8 MB route-file limit
+- 100,000 route-point limit
+- 2,000 route structures
+- DTD and entity rejection
+- coordinate and metadata validation
+- 6,000 rendered route points
+- 2,000 elevation points
+- bounded project, image and export sizes
 
-These controls reduce browser freezing, memory exhaustion, oversized SVG output and malicious XML expansion. They do not make arbitrary untrusted XML risk-free.
+## Provider and network hardening
+
+- fixed HTTPS provider endpoints
+- browser-local API credentials
+- credentials excluded from projects and exports
+- five geocoding candidates per place
+- 25 intermediate waypoints
+- 20 external acquisition requests per browser session
+- geocoding and routing timeouts
+- 2 MB provider-response limit
+- 100,000 generated-point limit
+- JSON/GeoJSON content-type validation
+- no silent provider fallback
+- explicit map consent and nine-tile limit
+- blocked OpenStreetMap response detection
 
 ## Browser controls
 
-The page declares a restrictive Content Security Policy and no-referrer policy. GitHub Pages cannot set every desired response header from repository content alone, so deployment-level controls such as `Permissions-Policy`, `X-Content-Type-Options` and CSP `frame-ancestors` are documented limitations.
+The application declares a restrictive Content Security Policy and uses `strict-origin-when-cross-origin`, which supports provider identification while limiting cross-origin path disclosure. GitHub Pages cannot set every desired response header from repository content alone.
 
 ## Automated controls
 
-CI runs structural, unit, security-policy and static-build checks. The Dependabot auto-merge workflow does not check out or execute pull-request code and only operates for the `dependabot[bot]` actor.
+CI runs structural, unit, security-policy, documentation, static-build and browser-assurance checks. The Dependabot auto-merge workflow never checks out or executes pull-request code.

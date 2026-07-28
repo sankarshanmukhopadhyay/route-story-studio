@@ -32,7 +32,7 @@ function wait(milliseconds) { return new Promise((resolve) => setTimeout(resolve
 function toDataUrl(blob) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('A map tile could not be read.')); reader.readAsDataURL(blob); }); }
 function routeBounds(route) { const points = route.segments.flatMap((segment) => segment.points); return points.reduce((bounds, point) => ({ minLat: Math.min(bounds.minLat, point.latitude), maxLat: Math.max(bounds.maxLat, point.latitude), minLon: Math.min(bounds.minLon, point.longitude), maxLon: Math.max(bounds.maxLon, point.longitude) }), { minLat: 90, maxLat: -90, minLon: 180, maxLon: -180 }); }
 
-export function fitTileRange(route) {
+export function fitTileRange(route, { zoomAdjustment = 0 } = {}) {
   const bounds = routeBounds(route);
   const latPad = Math.max((bounds.maxLat - bounds.minLat) * .12, .01);
   const lonPad = Math.max((bounds.maxLon - bounds.minLon) * .12, .01);
@@ -41,7 +41,20 @@ export function fitTileRange(route) {
     const minX = Math.floor(lonToTile(padded.minLon, zoom)); const maxX = Math.floor(lonToTile(padded.maxLon, zoom));
     const minY = Math.floor(latToTile(padded.maxLat, zoom)); const maxY = Math.floor(latToTile(padded.minLat, zoom));
     const count = (maxX - minX + 1) * (maxY - minY + 1);
-    if (count <= MAX_MAP_TILES) return { z: zoom, minX, maxX, minY, maxY, count, padded };
+    if (count <= MAX_MAP_TILES) {
+      const adjustment = Math.max(-2, Math.min(2, Math.trunc(Number(zoomAdjustment) || 0)));
+      if (adjustment <= 0) {
+        const targetZoom = Math.max(2, zoom + adjustment);
+        const adjustedMinX = Math.floor(lonToTile(padded.minLon, targetZoom)); const adjustedMaxX = Math.floor(lonToTile(padded.maxLon, targetZoom));
+        const adjustedMinY = Math.floor(latToTile(padded.maxLat, targetZoom)); const adjustedMaxY = Math.floor(latToTile(padded.minLat, targetZoom));
+        return { z: targetZoom, minX: adjustedMinX, maxX: adjustedMaxX, minY: adjustedMinY, maxY: adjustedMaxY, count: (adjustedMaxX-adjustedMinX+1)*(adjustedMaxY-adjustedMinY+1), padded, zoomAdjustment: adjustment, cropped: false };
+      }
+      const targetZoom = Math.min(18, zoom + adjustment); const centreLon = (padded.minLon + padded.maxLon) / 2; const centreLat = (padded.minLat + padded.maxLat) / 2;
+      const columns = Math.min(3, maxX - minX + 1); const rows = Math.min(3, maxY - minY + 1);
+      const centreX = Math.floor(lonToTile(centreLon, targetZoom)); const centreY = Math.floor(latToTile(centreLat, targetZoom));
+      const adjustedMinX = centreX - Math.floor(columns / 2); const adjustedMinY = centreY - Math.floor(rows / 2);
+      return { z: targetZoom, minX: adjustedMinX, maxX: adjustedMinX + columns - 1, minY: adjustedMinY, maxY: adjustedMinY + rows - 1, count: columns * rows, padded, zoomAdjustment: adjustment, cropped: true };
+    }
   }
   throw new Error('The route cannot be fitted within the map tile safety budget.');
 }
@@ -109,8 +122,8 @@ async function fetchTilesRespectfully(tiles, range, controller) {
   return loaded;
 }
 
-export async function fetchMapMosaic(route, { timeoutMs = 15_000 } = {}) {
-  const range = fitTileRange(route); const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
+export async function fetchMapMosaic(route, { timeoutMs = 15_000, zoomAdjustment = 0 } = {}) {
+  const range = fitTileRange(route, { zoomAdjustment }); const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const tiles = [];
     for (let y = range.minY; y <= range.maxY; y += 1) for (let x = range.minX; x <= range.maxX; x += 1) tiles.push({ x, y });
@@ -120,7 +133,7 @@ export async function fetchMapMosaic(route, { timeoutMs = 15_000 } = {}) {
     const canvas = document.createElement('canvas'); canvas.width = columns * TILE_SIZE; canvas.height = rows * TILE_SIZE;
     const context = canvas.getContext('2d'); if (!context) throw new Error('Map composition is unavailable in this browser.');
     for (const tile of loaded) context.drawImage(tile.image, (tile.x - range.minX) * TILE_SIZE, (tile.y - range.minY) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-    return { kind: 'map', mode: 'map', dataUrl: canvas.toDataURL('image/png'), provider: MAP_PROVIDER.id, attribution: MAP_PROVIDER.attribution, policyUrl: MAP_PROVIDER.privacyUrl, zoom: range.z, generatedAt: new Date().toISOString(), geoBounds: { minLon: tileToLon(range.minX, range.z), maxLon: tileToLon(range.maxX + 1, range.z), maxLat: tileToLat(range.minY, range.z), minLat: tileToLat(range.maxY + 1, range.z) } };
+    return { kind: 'map', mode: 'map', dataUrl: canvas.toDataURL('image/png'), provider: MAP_PROVIDER.id, attribution: MAP_PROVIDER.attribution, policyUrl: MAP_PROVIDER.privacyUrl, zoom: range.z, zoomAdjustment: range.zoomAdjustment || 0, cropped: Boolean(range.cropped), generatedAt: new Date().toISOString(), geoBounds: { minLon: tileToLon(range.minX, range.z), maxLon: tileToLon(range.maxX + 1, range.z), maxLat: tileToLat(range.minY, range.z), minLat: tileToLat(range.maxY + 1, range.z) } };
   } catch (error) {
     if (error?.name === 'AbortError') throw new Error('The map provider did not respond within the safety timeout.');
     throw error;

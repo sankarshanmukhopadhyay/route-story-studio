@@ -7,6 +7,8 @@ const projectModel = await readFile('src/project/project-model.js', 'utf8');
 const autoMerge = await readFile('.github/workflows/dependabot-auto-merge.yml', 'utf8');
 const mapLoader = await readFile('src/map/map-background.js', 'utf8');
 const safeUrl = await readFile('src/security/safe-url.js', 'utf8');
+const provider = await readFile('src/providers/openrouteservice-adapter.js', 'utf8');
+const acquisitionBudget = await readFile('src/acquisition/acquisition-budget.js', 'utf8');
 
 const requirements = [
   [html.includes('Content-Security-Policy'), 'Content Security Policy is missing.'],
@@ -27,7 +29,12 @@ const requirements = [
   [mapLoader.includes("referrerPolicy: MAP_PROVIDER.referrerPolicy"), 'Map requests must send the configured referrer policy.'],
   [safeUrl.includes('ALLOWED_MAP_HOSTS'), 'Map-link host allowlist is missing.'],
   [safeUrl.includes("url.protocol !== 'https:'"), 'Map-link HTTPS boundary is missing.'],
-  [safeUrl.includes('MAX_MAP_LINK_LENGTH'), 'Map-link length boundary is missing.']
+  [safeUrl.includes('MAX_MAP_LINK_LENGTH'), 'Map-link length boundary is missing.'],
+  [provider.includes('https://api.openrouteservice.org'), 'Routing provider host boundary is missing.'],
+  [provider.includes('MAX_PROVIDER_RESPONSE_BYTES'), 'Provider response-size limit is missing.'],
+  [provider.includes('MAX_GENERATED_POINTS'), 'Generated geometry point limit is missing.'],
+  [provider.includes('Authorization: key'), 'Provider credential header boundary is missing.'],
+  [acquisitionBudget.includes('MAX_ACQUISITION_REQUESTS = 20'), 'Acquisition request budget is missing.']
 ];
 for (const [condition, message] of requirements) if (!condition) throw new Error(message);
 console.log(`Security checks passed (${requirements.length} controls).`);

@@ -1,17 +1,37 @@
 # Privacy
 
-Route Story Studio is designed to process GPX files locally in the user’s browser.
+Route Story Studio is local-first, but some optional features use external services.
 
-## Initial release
+## Local processing
 
-- No account is required.
-- GPX files are not uploaded by the application.
-- No analytics or advertising scripts are included.
-- No route data is written to server logs by the application.
-- Exported SVG files are created locally.
+The following remain in the browser:
 
-GitHub Pages and the user’s network provider may receive ordinary web-request metadata when the application assets are loaded. The application itself does not send the imported GPX contents to GitHub.
+- GPX and KML files
+- local and portable projects
+- imported photographs
+- route statistics and composition settings
+- annotations
+- SVG, PNG and JPEG generation
+- Google Maps URL parsing and route-intent review
 
-## Future external routing
+No account, analytics or advertising scripts are included.
 
-Google Maps link-to-GPX reconstruction will require a routing provider when the link does not contain complete route geometry. Before any waypoint data leaves the browser, the interface must identify the recipient, data fields, purpose and expected retention boundary.
+## Explicit external processing
+
+### Place resolution and routing
+
+When the user selects the relevant action, the chosen provider receives:
+
+- named place text for geocoding;
+- confirmed origin, destination and waypoint coordinates;
+- selected travel mode.
+
+The initial adapter is openrouteservice. API keys are stored in browser session storage by default, or persistent browser storage only when “Remember key” is selected. Keys are excluded from projects, generated route data and exports.
+
+### Map backgrounds
+
+After explicit consent, OpenStreetMap receives the visible route area through tile requests and ordinary network metadata. Solid-colour and photograph backgrounds avoid this request.
+
+## User control
+
+Users can clear saved provider credentials, reset the workspace, clear browser projects, avoid map backgrounds and use coordinate inputs to avoid geocoding.

@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Local-first GPX and KML route composition studio with reusable projects, contextual backgrounds, annotations and publication exports.",
+  "description": "Local-first GPX/KML route composition studio with controlled map-link acquisition, provider-neutral routing and reusable projects.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",

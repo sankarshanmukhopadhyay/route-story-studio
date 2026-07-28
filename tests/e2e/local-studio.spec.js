@@ -71,3 +71,24 @@ test('reviews a supported Google Maps route intent locally', async ({ page }) =>
   await expect(page.locator('#intent-destination')).toHaveText('Manali, India');
   await expect(page.locator('#intent-mode')).toHaveText('driving');
 });
+
+
+test('reveals provider resolution in sequence after route-intent review', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: '1. Choose a route source' })).toBeVisible();
+  await page.locator('#map-link').fill('https://www.google.com/maps/dir/?api=1&origin=Delhi%2C%20India&destination=Manali%2C%20India&travelmode=driving');
+  await page.getByRole('button', { name: 'Review route intent' }).click();
+  await expect(page.locator('#provider-panel')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Resolve named places' })).toBeFocused();
+  await expect(page.locator('#story-controls')).toBeDisabled();
+});
+
+test('exposes bounded map zoom controls after map mode selection', async ({ page }) => {
+  await loadSample(page);
+  await page.locator('#background-mode').selectOption('map');
+  await expect(page.getByRole('button', { name: 'Zoom map out' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Zoom map in' })).toBeVisible();
+  await expect(page.locator('#map-zoom-status')).toHaveText('Fit whole route');
+  await page.getByRole('button', { name: 'Zoom map in' }).click();
+  await expect(page.locator('#map-zoom-status')).toContainText('Closer');
+});

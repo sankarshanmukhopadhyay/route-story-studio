@@ -63,7 +63,8 @@
         "type": {
           "enum": [
             "gpx",
-            "kml"
+            "kml",
+            "generated-route"
           ]
         },
         "name": {
@@ -93,6 +94,19 @@
           "items": {
             "type": "string"
           }
+        },
+        "provider": {
+          "type": "string"
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "routeIntentId": {
+          "type": "string"
+        },
+        "externalProcessing": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false
