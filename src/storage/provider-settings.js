@@ -8,17 +8,27 @@ function storageAvailable(storage) {
 export function loadProviderSettings() {
   const session = storageAvailable(sessionStorage) ? sessionStorage.getItem(SESSION_KEY) : null;
   const remembered = storageAvailable(localStorage) ? localStorage.getItem(LOCAL_KEY) : null;
-  const raw = session || remembered;
-  if (!raw) return { providerId: 'openrouteservice', apiKey: '', remember: false };
-  try { const parsed = JSON.parse(raw); return { providerId: 'openrouteservice', apiKey: String(parsed.apiKey || ''), remember: Boolean(remembered) }; }
-  catch { return { providerId: 'openrouteservice', apiKey: '', remember: false }; }
+
+  const defaultSettings = { providerId: 'openrouteservice', apiKey: '', remember: false };
+  if (!session && !remembered) return defaultSettings;
+
+  try {
+    const sessionParsed = session ? JSON.parse(session) : null;
+    const rememberedParsed = remembered ? JSON.parse(remembered) : null;
+    const providerId = String((sessionParsed && sessionParsed.providerId) || (rememberedParsed && rememberedParsed.providerId) || 'openrouteservice');
+    const parsedApiKey = String((sessionParsed && sessionParsed.apiKey) || '');
+    return { providerId, apiKey: parsedApiKey, remember: Boolean(remembered) };
+  } catch {
+    return defaultSettings;
+  }
 }
 
 export function saveProviderSettings({ providerId = 'openrouteservice', apiKey, remember = false }) {
-  const value = JSON.stringify({ providerId, apiKey: String(apiKey || '') });
-  if (storageAvailable(sessionStorage)) sessionStorage.setItem(SESSION_KEY, value);
+  const sessionValue = JSON.stringify({ providerId, apiKey: String(apiKey || '') });
+  const rememberedValue = JSON.stringify({ providerId });
+  if (storageAvailable(sessionStorage)) sessionStorage.setItem(SESSION_KEY, sessionValue);
   if (storageAvailable(localStorage)) {
-    if (remember) localStorage.setItem(LOCAL_KEY, value); else localStorage.removeItem(LOCAL_KEY);
+    if (remember) localStorage.setItem(LOCAL_KEY, rememberedValue); else localStorage.removeItem(LOCAL_KEY);
   }
 }
 
