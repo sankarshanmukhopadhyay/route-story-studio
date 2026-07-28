@@ -6,7 +6,7 @@ Delivered: GPX and KML import, local projects, portable project files, photo and
 
 ## v0.3.0 — Route acquisition and interoperability
 
-Planned: provider-neutral map-link parsing, geocoding and routing adapters, provenance-marked GPX generation, Google Maps URL support where route intent can be recovered, and explicit disclosure when a route is reconstructed rather than recorded.
+In development: supported Google Maps directions-link parsing and a canonical Route Intent model are now available. Next: constrained short-link expansion, geocoding and routing adapters, provenance-marked GPX/KML generation, and explicit disclosure when a route is reconstructed rather than recorded.
 
 ## v0.4.0 — Timelines and motion
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — v0.3.0 development
+
+- Added a canonical Route Intent model and JSON Schema.
+- Added local parsing for supported Google Maps directions URLs.
+- Added origin, destination, waypoint and travel-mode review before routing.
+- Added HTTPS, host-allowlist, credential and link-length controls.
+- Recognise short Google Maps links without following redirects.
+- Fixed map-consent focus assurance across Playwright browser targets.
+- Fixed release workflow setup when no npm lockfile is committed.
+
 ## 0.2.0 - 2026-07-28
 
 ### Added

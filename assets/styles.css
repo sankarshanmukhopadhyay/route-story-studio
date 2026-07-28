@@ -4,3 +4,14 @@
 .background-controls{display:grid;gap:.8rem;padding:1rem;border:1px solid var(--border);border-radius:13px;background:var(--surface-2)}.background-controls h3{font-size:.95rem}.background-controls small,.map-consent p{color:var(--muted);font-size:.78rem;line-height:1.45}.map-consent{display:grid;gap:.6rem;padding:.8rem;border-left:3px solid var(--accent-2);background:#101713;border-radius:8px}.map-consent p{margin:0}
 .map-consent{border:2px solid var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}.map-consent strong{color:var(--text);font-size:.95rem}.map-consent button{font-size:1rem}.map-consent.attention{animation:mapPulse 1.2s ease 2}@keyframes mapPulse{50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--accent) 28%,transparent)}}.annotation-controls{display:grid;gap:.7rem;padding:1rem;border:1px solid var(--border);border-radius:13px;background:var(--surface-2)}.annotation-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}.annotation-controls small{color:var(--muted)}.export-warning{padding:.75rem;border-radius:9px;background:#3c2117;color:#ffd0ac;font-size:.84rem}
 .map-help{display:grid;gap:.55rem;padding:.8rem;border:1px solid #d99157;border-radius:9px;background:#3c2117;color:#ffd9bd}.map-help p{margin:0;color:#ffd9bd;font-size:.8rem;line-height:1.5}.map-help-links{display:flex;gap:.7rem;flex-wrap:wrap}.map-help a{color:#fff1df;font-size:.78rem;font-weight:700}.map-help a:focus-visible{outline:3px solid #fff1df;outline-offset:3px}
+
+.acquisition-panel{display:grid;gap:.75rem;margin:1rem 0;padding:1rem;border:1px solid var(--border);border-radius:14px;background:var(--surface-2)}
+.acquisition-panel p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.5}
+.acquisition-panel input[type=url]{width:100%;border:1px solid var(--border);border-radius:9px;padding:.72rem;background:#101713;color:var(--text);font:inherit}
+.route-intent-review{padding:.9rem;border:1px solid color-mix(in srgb,var(--accent-2) 45%,var(--border));border-radius:12px;background:#101713}
+.route-intent-review dl{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin:.75rem 0}
+.route-intent-review dl div{padding:.55rem;border-radius:8px;background:var(--surface-2)}
+.route-intent-review dt{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.route-intent-review dd{margin:.2rem 0 0;overflow-wrap:anywhere}
+.intent-boundary{padding:.7rem;border-left:3px solid var(--accent);background:#2b1c13}
+@media(max-width:560px){.route-intent-review dl{grid-template-columns:1fr}}

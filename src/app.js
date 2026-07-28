@@ -1,3 +1,4 @@
+import { parseMapLink } from './acquisition/parse-map-link.js';
 import { readValidatedImage } from './media/image-security.js';
 import { fetchMapMosaic, MAP_PROVIDER } from './map/map-background.js';
 import { parseRouteFile } from './import/parse-route-file.js';
@@ -17,9 +18,40 @@ const elements = {
   file: $('#route-file'), projectFile: $('#project-file'), dropZone: $('#drop-zone'), status: $('#file-status'), controls: $('#story-controls'),
   title: $('#story-title'), subtitle: $('#story-subtitle'), backgroundMode: $('#background-mode'), backgroundImage: $('#background-image'), backgroundOpacity: $('#background-opacity'), overlayOpacity: $('#overlay-opacity'), mapConsent: $('#map-consent'), mapStatus: $('#map-status'), mapHelp: $('#map-help'), lineWidth: $('#line-width'), showElevation: $('#show-elevation'), showDuration: $('#show-duration'), showMarkers: $('#show-markers'), layout: $('#layout'), units: $('#units'), routeColour: $('#route-colour'), backgroundColour: $('#background-colour'), textColour: $('#text-colour'),
   downloadSvg: $('#download-svg'), downloadPng: $('#download-png'), downloadJpeg: $('#download-jpeg'), pngScale: $('#png-scale'), reset: $('#reset'), sample: $('#load-sample'), preview: $('#poster-preview'), provenance: $('#route-provenance'), summary: $('#route-summary'), summaryType: $('#summary-type'), summaryFormat: $('#summary-format'), summaryPoints: $('#summary-points'), summarySegments: $('#summary-segments'), summaryDistance: $('#summary-distance'), warnings: $('#import-warnings'),
+  mapLink: $('#map-link'), reviewMapLink: $('#review-map-link'), mapLinkStatus: $('#map-link-status'), intentReview: $('#route-intent-review'), intentSource: $('#intent-source'), intentOrigin: $('#intent-origin'), intentDestination: $('#intent-destination'), intentWaypoints: $('#intent-waypoints'), intentMode: $('#intent-mode'), intentWarnings: $('#intent-warnings'),
   annotationLabel: $('#annotation-label'), annotationPosition: $('#annotation-position'), addAnnotation: $('#add-annotation'), clearAnnotations: $('#clear-annotations'), annotationStatus: $('#annotation-status'), saveProject: $('#save-project'), openLatest: $('#open-latest-project'), exportProject: $('#export-project'), importProject: $('#import-project')
 };
 let route = null; let statistics = null; let currentSvg = ''; let currentProject = null; let renderFrame = 0; let operation = 0; let backgroundAsset = null; let mapConsentGranted = false; let mapLoading = false; let annotations = [];
+
+function locationLabel(location) {
+  if (!location) return 'Not recovered';
+  if (location.coordinates) return `${location.coordinates.latitude.toFixed(5)}, ${location.coordinates.longitude.toFixed(5)}`;
+  return location.label || location.rawValue || 'Unresolved';
+}
+function renderIntentWarnings(warnings) {
+  elements.intentWarnings.replaceChildren(...warnings.map((warning) => {
+    const item = document.createElement('li'); item.textContent = warning; return item;
+  }));
+  elements.intentWarnings.hidden = warnings.length === 0;
+}
+function reviewMapLink() {
+  try {
+    const intent = parseMapLink(elements.mapLink.value);
+    elements.intentReview.hidden = false;
+    elements.intentSource.textContent = intent.source.type === 'google-short-link' ? 'Google Maps short link' : 'Google Maps directions URL';
+    elements.intentOrigin.textContent = locationLabel(intent.origin);
+    elements.intentDestination.textContent = locationLabel(intent.destination);
+    elements.intentWaypoints.textContent = intent.waypoints.length ? intent.waypoints.map(locationLabel).join(' → ') : 'None recovered';
+    elements.intentMode.textContent = intent.travelMode || 'Not encoded';
+    renderIntentWarnings(intent.warnings);
+    elements.mapLinkStatus.textContent = intent.source.type === 'google-short-link'
+      ? 'Short link recognised. Expansion will be added with the provider gateway increment.'
+      : 'Route intent recovered locally. Review it before any future geocoding or routing.';
+  } catch (error) {
+    elements.intentReview.hidden = true;
+    elements.mapLinkStatus.textContent = error instanceof Error ? error.message : 'The map link could not be reviewed.';
+  }
+}
 
 function compositionState() {
   return { annotations: [...annotations], background: backgroundAsset ? { ...backgroundAsset, mode: elements.backgroundMode.value, opacity: Number(elements.backgroundOpacity.value), overlayOpacity: Number(elements.overlayOpacity.value) } : { mode: elements.backgroundMode.value, opacity: Number(elements.backgroundOpacity.value), overlayOpacity: Number(elements.overlayOpacity.value) }, title: elements.title.value, subtitle: elements.subtitle.value, lineWidth: elements.lineWidth.value, showElevation: elements.showElevation.checked, showDuration: elements.showDuration.checked, showMarkers: elements.showMarkers.checked, layout: elements.layout.value, units: elements.units.value, routeColour: elements.routeColour.value, backgroundColour: elements.backgroundColour.value, textColour: elements.textColour.value };
@@ -41,7 +73,7 @@ function renderNow() {
   elements.preview.replaceChildren(); elements.preview.insertAdjacentHTML('afterbegin', currentSvg); elements.preview.style.aspectRatio = LAYOUT_PRESETS[elements.layout.value].ratio; renderSummary();
 }
 function updateExportAvailability(){const blocked=elements.backgroundMode.value==='map' && (!backgroundAsset || backgroundAsset.mode!=='map' || mapLoading); elements.downloadSvg.disabled=blocked; elements.downloadPng.disabled=blocked; elements.downloadJpeg.disabled=blocked;}
-function updateBackgroundControls() { const mode = elements.backgroundMode.value; document.querySelector('#photo-controls').hidden = mode !== 'photo'; const panel=document.querySelector('#map-controls'); panel.hidden = mode !== 'map'; if(mode==='map' && (!backgroundAsset || backgroundAsset.mode!=='map')){ panel.classList.add('attention'); panel.scrollIntoView({behavior:'smooth',block:'center'}); panel.focus({preventScroll:true}); elements.mapStatus.textContent='Map selected, but not loaded. Press “Consent and load map now” before export.'; elements.mapHelp.hidden=true;} updateExportAvailability(); }
+function updateBackgroundControls() { const mode = elements.backgroundMode.value; document.querySelector('#photo-controls').hidden = mode !== 'photo'; const panel=document.querySelector('#map-controls'); panel.hidden = mode !== 'map'; if(mode==='map' && (!backgroundAsset || backgroundAsset.mode!=='map')){ panel.classList.add('attention'); panel.scrollIntoView({behavior:'smooth',block:'center'}); elements.mapConsent.focus({preventScroll:true}); elements.mapStatus.textContent='Map selected, but not loaded. Press “Consent and load map now” before export.'; elements.mapHelp.hidden=true;} updateExportAvailability(); }
 async function handlePhoto(file) { try { elements.status.textContent = 'Validating photograph locally…'; backgroundAsset = await readValidatedImage(file); elements.backgroundMode.value = 'photo'; updateBackgroundControls(); elements.status.textContent = 'Photograph added locally.'; scheduleRender(); } catch (error) { elements.status.textContent = error instanceof Error ? error.message : 'The photograph could not be loaded.'; } }
 async function handleMapConsent() { if (!route) return; try { mapLoading=true; updateExportAvailability(); mapConsentGranted = true; elements.mapConsent.disabled = true; elements.mapHelp.hidden=true; elements.mapStatus.textContent = `Loading up to 9 tiles from ${MAP_PROVIDER.name}…`; backgroundAsset = await fetchMapMosaic(route); elements.backgroundMode.value = 'map'; elements.mapStatus.textContent = `${MAP_PROVIDER.attribution}. Map imagery cached in this project session.`; elements.status.textContent = 'Map background loaded and aligned to the route.'; document.querySelector('#map-controls').classList.remove('attention'); scheduleRender(); } catch (error) { mapConsentGranted = false; backgroundAsset = null; elements.mapConsent.disabled = false; elements.mapStatus.textContent = error instanceof Error ? error.message : 'Map tiles could not be loaded.'; elements.status.textContent = 'Map background unavailable. No blocked tile was added to the poster.'; elements.mapHelp.hidden=false; scheduleRender(); } finally { mapLoading=false; updateExportAvailability(); } }
 function scheduleRender() { if (!renderFrame) renderFrame = window.requestAnimationFrame(renderNow); }
@@ -59,6 +91,9 @@ async function handleSaveProject() { try { currentProject = currentProjectSnapsh
 async function handleOpenLatestProject() { try { const [summary] = await listProjects(); if (!summary) throw new Error('No locally saved projects were found in this browser.'); const project = validateProject(await loadProject(summary.id)); applyRoute(project.route, `Project ${project.title}`, project.composition, project); } catch (error) { elements.status.textContent = error instanceof Error ? error.message : 'The project could not be opened.'; } }
 function handleExportProject() { try { currentProject = currentProjectSnapshot(); exportProjectFile(currentProject); elements.status.textContent = 'Portable .rssproj file prepared locally.'; } catch (error) { elements.status.textContent = error instanceof Error ? error.message : 'The project could not be exported.'; } }
 async function handleImportProject(file) { const token = ++operation; try { elements.status.textContent = `Opening ${file.name}…`; const project = await importProjectFile(file); if (token === operation) applyRoute(project.route, `Project ${project.title}`, project.composition, project); } catch (error) { if (token === operation) fail(error); } }
+
+elements.reviewMapLink.addEventListener('click', reviewMapLink);
+elements.mapLink.addEventListener('keydown', (event) => { if (event.key === 'Enter') { event.preventDefault(); reviewMapLink(); } });
 
 elements.file.addEventListener('change', () => { const [file] = elements.file.files; if (file) loadFile(file); });
 elements.projectFile.addEventListener('change', () => { const [file] = elements.projectFile.files; if (file) handleImportProject(file); });

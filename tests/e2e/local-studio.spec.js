@@ -54,10 +54,20 @@ test('makes map consent discoverable and sends a website Referer', async ({ page
   await loadSample(page);
   await page.locator('#background-mode').selectOption('map');
   await expect(page.locator('#map-controls')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Consent and load map now' })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Consent and load map now' })).toBeFocused({ timeout: 5_000 });
   await expect(page.getByRole('button', { name: 'Download PNG' })).toBeDisabled();
   await page.getByRole('button', { name: 'Consent and load map now' }).click();
   await expect(page.locator('#file-status')).toContainText('Map background loaded');
   expect(requests).toBeGreaterThan(0);
   await expect(page.getByRole('button', { name: 'Download PNG' })).toBeEnabled();
+});
+
+test('reviews a supported Google Maps route intent locally', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#map-link').fill('https://www.google.com/maps/dir/?api=1&origin=28.6139,77.2090&destination=Manali%2C%20India&travelmode=driving');
+  await page.getByRole('button', { name: 'Review route intent' }).click();
+  await expect(page.locator('#route-intent-review')).toBeVisible();
+  await expect(page.locator('#intent-origin')).toContainText('28.61390');
+  await expect(page.locator('#intent-destination')).toHaveText('Manali, India');
+  await expect(page.locator('#intent-mode')).toHaveText('driving');
 });

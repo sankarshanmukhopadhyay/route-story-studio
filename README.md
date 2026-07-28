@@ -63,6 +63,12 @@ Map mode requires an explicit **Consent and load map now** action. Route Story S
 
 OpenStreetMap's standard tile service is best-effort. A solid colour or imported photograph provides a fully local fallback.
 
+## v0.3.0 development: map-link review
+
+Paste a supported Google Maps directions URL to review the origin, destination, waypoints and travel mode before any external provider is contacted. This increment recovers route intent only. It does not yet expand short links, geocode named places or generate route geometry.
+
+See [Reviewing map links](docs/converting-map-links.html).
+
 ## Development
 
 Requires Node.js 22 or later. CI uses Node.js 24.

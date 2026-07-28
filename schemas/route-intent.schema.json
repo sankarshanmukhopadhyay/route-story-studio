@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sankarshanmukhopadhyay.github.io/route-story-studio/schemas/route-intent.schema.json",
+  "title": "Route Intent",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "source",
+    "waypoints",
+    "avoidances",
+    "unresolvedParameters",
+    "warnings"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "importedAt"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "google-maps-url",
+            "google-short-link",
+            "manual-waypoints",
+            "coordinate-list"
+          ]
+        },
+        "originalUrl": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "importedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "origin": {
+      "$ref": "#/$defs/location"
+    },
+    "destination": {
+      "$ref": "#/$defs/location"
+    },
+    "waypoints": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "$ref": "#/$defs/location"
+      }
+    },
+    "travelMode": {
+      "enum": [
+        "driving",
+        "walking",
+        "bicycling",
+        "transit"
+      ]
+    },
+    "avoidances": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "unresolvedParameters": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "maxLength": 500
+      }
+    }
+  },
+  "$defs": {
+    "location": {
+      "type": "object",
+      "required": [
+        "rawValue",
+        "resolutionStatus"
+      ],
+      "properties": {
+        "rawValue": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "resolutionStatus": {
+          "enum": [
+            "coordinates",
+            "named-place",
+            "provider-place-id",
+            "unresolved"
+          ]
+        },
+        "coordinates": {
+          "type": "object",
+          "required": [
+            "latitude",
+            "longitude"
+          ],
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "longitude": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
