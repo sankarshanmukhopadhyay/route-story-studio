@@ -52,6 +52,8 @@ export function createPosterSvg(options) {
   const { route, statistics, title, subtitle, showElevation = true, showDuration = true, showMarkers = true, units = 'metric', layout = 'portrait' } = options;
   const lineWidth = clamp(options.lineWidth, 2, 14);
   const routeColor = safeColour(options.routeColor, '#f7f3e9'); const backgroundColor = safeColour(options.backgroundColor, '#0b0f0c'); const textColor = safeColour(options.textColor, '#f5f1e8');
+  const background = options.background && typeof options.background === 'object' ? options.background : { mode: 'solid' };
+  const backgroundOpacity = clamp(background.opacity ?? 1, 0.1, 1); const overlayOpacity = clamp(background.overlayOpacity ?? 0.18, 0, 0.8);
   const preset = LAYOUT_PRESETS[layout] ?? LAYOUT_PRESETS.portrait; const landscape = layout === 'landscape';
   const mappedSegments = mapSegments(route, preset.routeBox); const points = allPoints(route);
   const elevationBox = landscape ? { x: 1060, y: 500, width: 450, height: 95 } : { x: 90, y: preset.elevationY, width: 900, height: 100 };
@@ -61,12 +63,14 @@ export function createPosterSvg(options) {
   const statMarkup = stats.map((stat, index) => `<g transform="translate(${statsX + index * statsWidth / stats.length} 0)"><text y="${preset.statsY}" class="stat-value">${escapeXml(stat.value)}</text><text y="${preset.statsY + 35}" class="stat-label">${stat.label}</text></g>`).join('');
   const segmentMarkup = mappedSegments.map((segment) => `<path d="${path(segment)}" fill="none" stroke="${routeColor}" stroke-width="${lineWidth}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
   const first = mappedSegments[0][0]; const last = mappedSegments.at(-1).at(-1); const titleX = landscape ? 1060 : 90; const titleSize = landscape ? 62 : 72;
+  const imageMarkup = background.mode !== 'solid' && /^data:image\/(?:png|jpeg|webp);base64,/.test(String(background.dataUrl || '')) ? `<image href="${background.dataUrl}" x="0" y="0" width="${preset.width}" height="${preset.height}" preserveAspectRatio="xMidYMid slice" opacity="${backgroundOpacity}"/><rect width="100%" height="100%" fill="${backgroundColor}" opacity="${overlayOpacity}"/>` : '';
+  const attribution = background.mode === 'map' && background.attribution ? `<text x="${preset.width - 24}" y="${preset.height - 18}" text-anchor="end" font-size="13" opacity=".75">${escapeXml(background.attribution)}</text>` : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${preset.width} ${preset.height}" role="img" aria-label="Route poster for ${escapeXml(title)}">
 <style>text{font-family:Inter,Arial,sans-serif;fill:${textColor}}.eyebrow{font-size:17px;font-weight:700;letter-spacing:4px;fill:#86c8aa}.title{font-size:${titleSize}px;font-weight:800;letter-spacing:-2px}.subtitle{font-size:25px;opacity:.72}.stat-value{font-size:34px;font-weight:800}.stat-label{font-size:13px;font-weight:700;letter-spacing:2px;opacity:.7}</style>
-<rect width="100%" height="100%" fill="${backgroundColor}"/><circle cx="${preset.width * .88}" cy="${preset.height * .12}" r="${preset.height * .16}" fill="#ef8f4c" opacity=".08"/>
+<rect width="100%" height="100%" fill="${backgroundColor}"/>${imageMarkup}<circle cx="${preset.width * .88}" cy="${preset.height * .12}" r="${preset.height * .16}" fill="#ef8f4c" opacity=".08"/>
 <text x="${titleX}" y="70" class="eyebrow">ROUTE STORY</text>${segmentMarkup}
 ${showMarkers ? `<circle cx="${first.x}" cy="${first.y}" r="11" fill="#7bc4a4" stroke="#0d120f" stroke-width="4"/><circle cx="${last.x}" cy="${last.y}" r="11" fill="#ef8f4c" stroke="#0d120f" stroke-width="4"/>` : ''}
 <text x="${titleX}" y="${preset.titleY}" class="title">${escapeXml(String(title).slice(0, 80))}</text><text x="${titleX}" y="${preset.titleY + 48}" class="subtitle">${escapeXml(String(subtitle || route.source.name).slice(0, 120))}</text>
 ${showElevation && elevation ? `<text x="${elevationBox.x}" y="${elevationBox.y - 20}" class="eyebrow">ELEVATION PROFILE</text><path d="${elevation}" fill="none" stroke="${routeColor}" stroke-width="4" stroke-linecap="round"/>` : ''}${statMarkup}
-<text x="${titleX}" y="${preset.height - 45}" class="subtitle" font-size="16">Created locally with Route Story Studio · ${escapeXml(route.sourceType === 'planned-route' ? 'planned route' : 'recorded track')}</text></svg>`;
+<text x="${titleX}" y="${preset.height - 45}" class="subtitle" font-size="16">Created locally with Route Story Studio · ${escapeXml(route.sourceType === 'planned-route' ? 'planned route' : 'recorded track')}</text>${attribution}</svg>`;
 }

@@ -50,3 +50,11 @@ All notable changes to Route Story Studio are documented here.
 ### Known limitations
 
 The release does not include a geographic map background, geometry editing, photo composition, project persistence, animation, cloud storage or Google Maps link-to-GPX conversion.
+
+### Added — v0.2.0 development, composition backgrounds
+
+- Local photo background validation and composition.
+- Explicit-consent OpenStreetMap tile loading with a nine-tile budget.
+- Background opacity and overlay controls.
+- Mandatory map attribution in route-story output.
+- Documentation and automated boundary tests for background processing.

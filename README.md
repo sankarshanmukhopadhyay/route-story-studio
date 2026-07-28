@@ -81,3 +81,13 @@ Do not place private route data in public issues. See [SECURITY.md](SECURITY.md)
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
+
+## v0.2.0 development: contextual backgrounds
+
+- Add local JPEG, PNG or WebP photo backgrounds.
+- Choose map mode only after an explicit disclosure and consent step.
+- Map loading is limited to nine OpenStreetMap tiles with response-size and timeout controls.
+- Map attribution is included in generated artefacts.
+- Solid-colour and photo modes make no external map request.
+
+See [Photo and map backgrounds](docs/backgrounds.html).
