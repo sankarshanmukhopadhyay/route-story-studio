@@ -9,6 +9,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,8 +19,12 @@ jobs:
           node-version: 24
       - name: Validate, test and build
         run: npm run validate
+      - name: Built-site smoke test
+        run: npm run site-smoke
       - name: Upload build evidence
         uses: actions/upload-artifact@v7
         with:
           name: route-story-studio-site
           path: dist
+          if-no-files-found: error
+          retention-days: 14

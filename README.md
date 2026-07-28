@@ -6,31 +6,41 @@ Route Story Studio is a local-first web application for turning GPX tracks and p
 
 ## Current capability
 
-- Import GPX 1.0 and GPX 1.1 files in the browser
+- Import common GPX 1.0 and GPX 1.1 files in the browser
 - Preserve multiple track and route segments
 - Distinguish recorded tracks from planned routes
-- Validate coordinate, file-size and point-count boundaries
 - Calculate distance, duration, elevation gain and elevation loss
-- Use an included sample route for immediate onboarding
 - Choose portrait, square or landscape poster layouts
-- Switch between metric and imperial display
-- Customise route, background and text colours
-- Toggle elevation, duration and endpoint markers
-- Export the canonical poster as SVG
+- Export SVG and standard or 2× PNG files
+- Use metric or imperial display
+- Use an included sample route
+- Enforce file, point, segment, render and export resource limits
 - Deploy as a static GitHub Pages application
 
-## Local development
+## Local validation
 
 ```bash
 npm run validate
+npm run site-smoke
+```
+
+The built-site smoke test expects `python3` on the execution path. A simple development server can be started with:
+
+```bash
 python3 -m http.server 8000
 ```
 
-Open `http://localhost:8000`. A local HTTP server is required for the sample-route request.
-
 ## Privacy boundary
 
-GPX parsing, statistics and rendering occur in the browser. The current application has no upload endpoint, user account, analytics service, cloud persistence, map tile request or external routing request.
+GPX parsing, statistics, rendering and export occur in the browser. The current application has no upload endpoint, user account, analytics service, cloud persistence, map tile request or external routing request.
+
+## Security boundary
+
+GPX files are untrusted input. The application rejects XML entity declarations, limits input to 8 MB, limits point and segment counts, bounds SVG complexity and limits PNG export size. See [SECURITY.md](SECURITY.md) and [security hardening](docs/security-hardening.md).
+
+## Dependabot automation
+
+Eligible Dependabot PRs can be approved and set to squash auto-merge after repository auto-merge, Actions permissions and required checks are configured. See [the auto-merge policy](docs/dependabot-auto-merge.md).
 
 ## GitHub Pages
 
@@ -41,5 +51,3 @@ The Pages workflow builds `dist/` and deploys it after project checks and tests 
 - `v0.1.0`: hardened Local GPX Studio with SVG and PNG export and browser assurance
 - `v0.2.0`: richer composition, image/map backgrounds and local project persistence
 - `v0.3.0`: provenance-aware map-link-to-GPX conversion through provider adapters
-
-See [ROADMAP.md](ROADMAP.md), [PRIVACY.md](PRIVACY.md), [SECURITY.md](SECURITY.md) and [architecture documentation](docs/architecture.md).

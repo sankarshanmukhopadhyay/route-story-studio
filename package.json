@@ -8,8 +8,12 @@
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",
     "build": "node scripts/build.mjs",
-    "validate": "npm run check && npm test && npm run build"
+    "validate": "npm run check && npm run security-check && npm test && npm run build",
+    "security-check": "node scripts/security-check.mjs",
+    "site-smoke": "node scripts/site-smoke.mjs"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "license": "MIT"
 }
