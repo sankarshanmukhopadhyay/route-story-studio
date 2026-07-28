@@ -1,0 +1,7 @@
+name = "route-story-link-resolver"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://sankarshanmukhopadhyay.github.io,http://127.0.0.1:4173,http://localhost:4173"

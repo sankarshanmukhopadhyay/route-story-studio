@@ -106,3 +106,7 @@ Do not put private route data or API keys in public issues. See [SECURITY.md](SE
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
+
+## v0.3.0 acquisition hardening
+
+Commit 4 adds a constrained `maps.app.goo.gl` resolver reference implementation under `gateway/`. Short-link expansion and openrouteservice routing remain separate authorities: the gateway returns an approved final Google Maps URL, while openrouteservice resolves confirmed places and generates planned geometry. The application records resolution metadata in the provenance receipt without exporting the complete short URL.

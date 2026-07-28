@@ -11,3 +11,7 @@ In development: supported Google Maps directions-link parsing and a canonical Ro
 ## v0.4.0 — Timelines and motion
 
 Planned: trip timelines, photo waypoints, animated route playback and richer story sequences.
+
+### v0.3.0 Commit 4 delivered
+
+Constrained Google Maps short-link expansion, acquisition trust-boundary hardening, resolution evidence and interoperability assurance. Short-link redirect resolution is separate from openrouteservice geocoding and route generation.

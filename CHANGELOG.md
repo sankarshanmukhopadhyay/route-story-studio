@@ -112,3 +112,12 @@ The release does not include a geographic map background, geometry editing, phot
 - Route reconstruction from confirmed map-link intent as a planned route.
 - Map zoom controls from wide context to closer route-centred views.
 - Re-sequenced workspace and comprehensive acquisition/provider documentation.
+
+## v0.3.0 development — acquisition security and interoperability
+
+- Added a separately deployable Cloudflare Worker for constrained `maps.app.goo.gl` redirect expansion.
+- Added exact redirect-host allowlists, HTTPS enforcement, redirect and timeout limits, origin-restricted CORS and private-address rejection.
+- Added user-controlled short-link expansion, resolver endpoint persistence and cancellation.
+- Integrated expanded full URLs with the existing route-intent parser and openrouteservice workflow.
+- Added privacy-preserving short-link resolution evidence to route-generation receipts.
+- Added adversarial redirect and resolver-client tests plus A1–A3 acquisition assurance documentation.

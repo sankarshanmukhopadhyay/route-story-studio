@@ -1,0 +1,10 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://sankarshanmukhopadhyay.github.io/route-story-studio/schemas/short-link-resolution.schema.json",
+  "title":"Short Link Resolution",
+  "type":"object",
+  "required":["status","sourceUrl","finalUrl","finalHost","redirectCount","resolvedAt"],
+  "properties":{
+    "status":{"const":"resolved"},"sourceUrl":{"type":"string","format":"uri","maxLength":4096},"finalUrl":{"type":"string","format":"uri","maxLength":4096},"finalHost":{"type":"string","maxLength":255},"redirectCount":{"type":"integer","minimum":0,"maximum":5},"resolvedAt":{"type":"string","format":"date-time"}
+  },"additionalProperties":false
+}

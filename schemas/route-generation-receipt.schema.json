@@ -58,6 +58,38 @@
       "items": {
         "type": "string"
       }
+    },
+    "sourceResolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "finalHost": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "redirectCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sourceUrlHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "finalHost",
+        "redirectCount",
+        "resolvedAt",
+        "sourceUrlHash"
+      ],
+      "additionalProperties": false
     }
   }
 }

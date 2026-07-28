@@ -52,3 +52,7 @@ The application declares a restrictive Content Security Policy and uses `strict-
 ## Automated controls
 
 CI runs structural, unit, security-policy, documentation, static-build and browser-assurance checks. The Dependabot auto-merge workflow never checks out or executes pull-request code.
+
+## Short-link resolver boundary
+
+The reference gateway accepts only `maps.app.goo.gl`, follows no more than five redirects across an exact Google Maps host allowlist, rejects private/local addresses and embedded credentials, enforces an eight-second request timeout, restricts CORS to configured application origins and returns metadata only. It must never be repurposed as an arbitrary URL proxy or page scraper.

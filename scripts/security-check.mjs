@@ -9,6 +9,9 @@ const mapLoader = await readFile('src/map/map-background.js', 'utf8');
 const safeUrl = await readFile('src/security/safe-url.js', 'utf8');
 const provider = await readFile('src/providers/openrouteservice-adapter.js', 'utf8');
 const acquisitionBudget = await readFile('src/acquisition/acquisition-budget.js', 'utf8');
+const shortResolver = await readFile('src/acquisition/short-link-resolver.js', 'utf8');
+const gatewayPolicy = await readFile('gateway/src/redirect-policy.js', 'utf8');
+const gateway = await readFile('gateway/src/index.js', 'utf8');
 
 const requirements = [
   [html.includes('Content-Security-Policy'), 'Content Security Policy is missing.'],
@@ -34,7 +37,13 @@ const requirements = [
   [provider.includes('MAX_PROVIDER_RESPONSE_BYTES'), 'Provider response-size limit is missing.'],
   [provider.includes('MAX_GENERATED_POINTS'), 'Generated geometry point limit is missing.'],
   [provider.includes('Authorization: key'), 'Provider credential header boundary is missing.'],
-  [acquisitionBudget.includes('MAX_ACQUISITION_REQUESTS = 20'), 'Acquisition request budget is missing.']
+  [acquisitionBudget.includes('MAX_ACQUISITION_REQUESTS = 20'), 'Acquisition request budget is missing.'],
+  [shortResolver.includes('MAX_RESOLUTION_RESPONSE_BYTES'), 'Short-link resolver response limit is missing.'],
+  [gatewayPolicy.includes('SHORT_LINK_INPUT_HOSTS'), 'Gateway short-link input allowlist is missing.'],
+  [gatewayPolicy.includes('MAX_GATEWAY_REDIRECTS = 5'), 'Gateway redirect limit is missing.'],
+  [gatewayPolicy.includes('GATEWAY_TIMEOUT_MS = 8000'), 'Gateway timeout is missing.'],
+  [gateway.includes("redirect:'manual'"), 'Gateway must follow redirects manually.'],
+  [gateway.includes('ALLOWED_ORIGINS'), 'Gateway CORS origin restriction is missing.']
 ];
 for (const [condition, message] of requirements) if (!condition) throw new Error(message);
 console.log(`Security checks passed (${requirements.length} controls).`);
