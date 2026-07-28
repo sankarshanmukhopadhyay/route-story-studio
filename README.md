@@ -54,3 +54,5 @@ Current release: **v0.3.0 — Route Poster Studio**.
 ## Elevation in the poster and summary
 
 The generated poster now shows **Elevation range**, which is the highest point minus the lowest point represented in the route. The route summary uses simpler wording and shows **Total climb**, **Elevation range**, **Highest point** and **Lowest point** so the numbers are easier to understand.
+
+> **Poster metric:** every generated poster shows **Elevation range**, calculated as the highest elevation minus the lowest elevation represented in the route.

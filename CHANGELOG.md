@@ -49,6 +49,9 @@ All notable changes to Route Story Studio are documented here.
 
 ## Unreleased
 
+### Fixed
+- enforced **Elevation range** as the sole poster elevation metric and added a cache-busted renderer import so deployed browsers do not reuse the earlier Estimated Ascent module
+
 ### Changed
 - poster exports now show **Elevation range** instead of cumulative climb
 - route summary wording is simplified to **Total climb**, **Elevation range**, **Highest point** and **Lowest point**
