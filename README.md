@@ -49,3 +49,8 @@ Open [`docs/index.html`](docs/index.html) or the published GitHub Pages site.
 ## Release
 
 Current release: **v0.3.0 — Route Poster Studio**.
+
+
+## Elevation in the poster and summary
+
+The generated poster now shows **Elevation range**, which is the highest point minus the lowest point represented in the route. The route summary uses simpler wording and shows **Total climb**, **Elevation range**, **Highest point** and **Lowest point** so the numbers are easier to understand.

@@ -47,7 +47,7 @@ test('formats imperial route distance', () => {
 });
 
 
-test('uses distinct cumulative ascent labels for planned and recorded routes', () => {
-  assert.equal(elevationMetricLabel({ sourceType: 'planned-route' }), 'ESTIMATED ASCENT');
-  assert.equal(elevationMetricLabel({ sourceType: 'recorded-track' }), 'ELEVATION GAIN');
+test('uses simpler climb wording in the summary', () => {
+  assert.equal(elevationMetricLabel({ sourceType: 'planned-route' }), 'TOTAL CLIMB');
+  assert.equal(elevationMetricLabel({ sourceType: 'recorded-track' }), 'TOTAL CLIMB');
 });

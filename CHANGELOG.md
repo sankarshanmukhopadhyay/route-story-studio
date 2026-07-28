@@ -49,6 +49,12 @@ All notable changes to Route Story Studio are documented here.
 
 ## Unreleased
 
+### Changed
+- poster exports now show **Elevation range** instead of cumulative climb
+- route summary wording is simplified to **Total climb**, **Elevation range**, **Highest point** and **Lowest point**
+- elevation documentation is rewritten to match the simpler in-product wording
+
+
 ### Fixed
 
 - Serve axe-core through a same-origin test-only endpoint so browser accessibility assurance runs with the production Content Security Policy still enforced.

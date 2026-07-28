@@ -50,14 +50,13 @@ export function calculateStatistics(input) {
 }
 
 export function elevationMetricLabel(route) {
-  return route?.sourceType === 'planned-route' ? 'ESTIMATED ASCENT' : 'ELEVATION GAIN';
+  return 'TOTAL CLIMB';
 }
 
 export function elevationMetricDescription(route) {
   return route?.sourceType === 'planned-route'
-    ? 'Estimated ascent is the cumulative total of uphill changes in the route elevation data. It is not the difference between the highest and lowest points, and planned-route values may be sensitive to terrain-model noise.'
-    : 'Elevation gain is the cumulative total of uphill changes in the recorded elevation data. It is not the difference between the highest and lowest points.';
-
+    ? 'Total climb adds up every uphill section in the route. For planned routes, this is an estimate based on the imported elevation data.'
+    : 'Total climb adds up every uphill section in the route. It is different from elevation range, which only compares the highest and lowest points.';
 }
 
 export function formatDistance(metres, units = 'metric') {

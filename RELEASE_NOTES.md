@@ -25,3 +25,8 @@ GPX, KML, local project, photograph and image-export processing remain in the br
 ## Upgrade note
 
 No project migration is required. Existing v0.2.0 projects remain compatible.
+
+
+## Elevation in the poster and summary
+
+The generated poster now shows **Elevation range**, which is the highest point minus the lowest point represented in the route. The route summary uses simpler wording and shows **Total climb**, **Elevation range**, **Highest point** and **Lowest point** so the numbers are easier to understand.
