@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
 
 async function loadSample(page) {
   await page.goto('/');
@@ -35,8 +34,7 @@ test('imports a GPX file from the file chooser', async ({ page }) => {
 
 test('has no serious or critical axe violations', async ({ page }) => {
   await loadSample(page);
-  const axeSource = await readFile(new URL('../../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
-  await page.addScriptTag({ content: axeSource });
+  await page.addScriptTag({ url: '/__test__/axe.min.js' });
   const results = await page.evaluate(async () => window.axe.run(document, {
     resultTypes: ['violations'],
     rules: { 'color-contrast': { enabled: true } },

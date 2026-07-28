@@ -2,6 +2,14 @@
 
 All notable changes to Route Story Studio are documented here.
 
+## Unreleased
+
+### Fixed
+
+- Serve axe-core through a same-origin test-only endpoint so browser accessibility assurance runs with the production Content Security Policy still enforced.
+- Replace inline accessibility-script injection, which was correctly blocked by `script-src 'self'` in Chromium, Firefox and WebKit.
+
+
 ## [Unreleased]
 
 ### Added
