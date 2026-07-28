@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Turn GPX tracks into private, shareable route stories directly in your browser." />
+    <meta name="theme-color" content="#111713" />
+    <title>Route Story Studio</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">LOCAL-FIRST ROUTE PUBLISHING</p>
+        <h1>Route Story Studio</h1>
+        <p class="lede">Turn a GPX track into a clean, shareable route image without uploading your journey.</p>
+      </div>
+      <span class="processing-badge" title="GPX data is processed in this browser">Local processing</span>
+    </header>
+
+    <main id="workspace" class="workspace">
+      <section class="control-panel" aria-labelledby="import-title">
+        <h2 id="import-title">1. Import a route</h2>
+        <label class="drop-zone" id="drop-zone">
+          <input id="gpx-file" type="file" accept=".gpx,application/gpx+xml,application/xml,text/xml" />
+          <strong>Choose a GPX file</strong>
+          <span>or drop it here</span>
+          <small>Processed locally. Maximum recommended size: 25 MB.</small>
+        </label>
+        <p id="file-status" class="status" role="status">No route loaded.</p>
+
+        <fieldset id="story-controls" disabled>
+          <legend>2. Shape the story</legend>
+          <label>
+            Title
+            <input id="story-title" type="text" maxlength="80" value="My route story" />
+          </label>
+          <label>
+            Subtitle
+            <input id="story-subtitle" type="text" maxlength="120" placeholder="Place, date or expedition name" />
+          </label>
+          <label>
+            Route line width
+            <input id="line-width" type="range" min="2" max="14" value="7" />
+          </label>
+          <label class="toggle"><input id="show-elevation" type="checkbox" checked /> Show elevation profile</label>
+          <label class="toggle"><input id="show-duration" type="checkbox" checked /> Show duration</label>
+          <button id="download-svg" type="button">Download SVG</button>
+        </fieldset>
+      </section>
+
+      <section class="preview-panel" aria-labelledby="preview-title">
+        <div class="preview-heading">
+          <div>
+            <p class="eyebrow">LIVE PREVIEW</p>
+            <h2 id="preview-title">Route poster</h2>
+          </div>
+          <span id="route-provenance" class="provenance">Awaiting source</span>
+        </div>
+        <div id="poster-preview" class="poster-preview" aria-live="polite">
+          <div class="empty-state">
+            <p>Your route poster will appear here.</p>
+            <span>Import a GPX track to begin.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Route Story Studio is an open-source, local-first project.</p>
+      <nav aria-label="Project information">
+        <a href="PRIVACY.md">Privacy</a>
+        <a href="SECURITY.md">Security</a>
+        <a href="docs/architecture.md">Architecture</a>
+      </nav>
+    </footer>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

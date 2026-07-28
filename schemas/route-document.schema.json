@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sankarshanmukhopadhyay.github.io/route-story-studio/schemas/route-document.schema.json",
+  "title": "Route Story Studio Route Document",
+  "type": "object",
+  "required": ["schemaVersion", "points", "source", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "title": { "type": "string", "maxLength": 120 },
+    "points": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 250000,
+      "items": {
+        "type": "object",
+        "required": ["latitude", "longitude"],
+        "properties": {
+          "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+          "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+          "elevationMetres": { "type": ["number", "null"] },
+          "timestamp": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["type", "name"],
+      "properties": {
+        "type": { "enum": ["gpx", "google-maps-url", "geojson", "kml", "manual"] },
+        "name": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["geometrySource", "warnings"],
+      "properties": {
+        "geometrySource": { "type": "string" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "additionalProperties": true
+}

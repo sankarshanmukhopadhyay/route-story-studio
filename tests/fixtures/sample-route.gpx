@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Route Story Studio tests" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>Kolkata River Loop</name></metadata>
+  <trk><name>Kolkata River Loop</name><trkseg>
+    <trkpt lat="22.5726" lon="88.3639"><ele>9</ele><time>2026-01-01T05:00:00Z</time></trkpt>
+    <trkpt lat="22.5800" lon="88.3400"><ele>13</ele><time>2026-01-01T05:20:00Z</time></trkpt>
+    <trkpt lat="22.5958" lon="88.3100"><ele>7</ele><time>2026-01-01T05:50:00Z</time></trkpt>
+    <trkpt lat="22.5900" lon="88.2800"><ele>11</ele><time>2026-01-01T06:20:00Z</time></trkpt>
+  </trkseg></trk>
+</gpx>
