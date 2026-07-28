@@ -28,7 +28,7 @@ test('downloads SVG output', async ({ page }) => {
 
 test('imports a GPX file from the file chooser', async ({ page }) => {
   await page.goto('/');
-  await page.locator('#gpx-file').setInputFiles('tests/fixtures/sample-route.gpx');
+  await page.locator('#route-file').setInputFiles('tests/fixtures/sample-route.gpx');
   await expect(page.locator('#route-summary')).toBeVisible();
   await expect(page.locator('#file-status')).toContainText('points loaded');
 });

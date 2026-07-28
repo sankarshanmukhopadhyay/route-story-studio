@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sankarshanmukhopadhyay.github.io/route-story-studio/schemas/route-story-project.schema.json",
+  "title": "Route Story Studio Project",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "createdAt", "updatedAt", "route", "composition", "media", "annotations", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": "2.0" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "route": { "$ref": "route-document.schema.json" },
+    "composition": { "type": "object" },
+    "media": { "type": "array", "maxItems": 20 },
+    "annotations": { "type": "array", "maxItems": 500 },
+    "provenance": { "type": "object", "required": ["application", "applicationVersion", "localFirst"] }
+  },
+  "additionalProperties": false
+}

@@ -2,7 +2,9 @@ import { access, readFile } from 'node:fs/promises';
 
 const required = [
   'index.html', 'assets/styles.css', 'src/app.js', 'src/gpx/parse-gpx.js',
-  'src/render/poster-svg.js', 'src/export/export-png.js', 'schemas/route-document.schema.json',
+  'src/render/poster-svg.js', 'src/export/export-png.js', 'src/kml/parse-kml.js', 'src/import/parse-route-file.js',
+  'src/project/project-model.js', 'src/project/project-file.js', 'src/storage/indexeddb.js',
+  'schemas/route-document.schema.json', 'schemas/route-story-project.schema.json',
   'docs/index.html', 'docs/getting-started.html', 'docs/supported-gpx.html',
   'docs/privacy-model.html', 'docs/security-model.html', 'docs/known-limitations.html',
   'docs/release-checklist.html', 'RELEASE_NOTES.md', 'SBOM.spdx.json'

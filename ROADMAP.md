@@ -4,8 +4,10 @@
 
 Released baseline: local GPX import, validation, statistics, configurable route-story layouts, SVG/PNG export, overload controls, browser assurance and user documentation.
 
-## v0.2.0: Composition and local projects
+## v0.2.0: Route Composition Studio
 
+- GPX and KML route import
+- Versioned local project save, reopen and portable project files
 - Optional photograph backgrounds
 - Optional map backgrounds with explicit provider disclosure
 - Additional layout templates

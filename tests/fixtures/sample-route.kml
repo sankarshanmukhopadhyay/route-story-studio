@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Sample KML route</name>
+    <Placemark><name>Start</name><Point><coordinates>77.5946,12.9716,920</coordinates></Point></Placemark>
+    <Placemark><name>Route</name><LineString><coordinates>
+      77.5946,12.9716,920 77.6000,12.9800,925 77.6100,12.9900,930
+    </coordinates></LineString></Placemark>
+  </Document>
+</kml>

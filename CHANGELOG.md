@@ -2,6 +2,16 @@
 
 All notable changes to Route Story Studio are documented here.
 
+## [Unreleased]
+
+### Added
+
+- KML `LineString`, `Point` placemark and `gx:Track` import
+- Versioned Route Story project model
+- IndexedDB project save and reopen workflow
+- Portable `.rssproj` project import and export
+- Project and KML resource-admission controls
+
 ## [0.1.0] - 2026-07-28
 
 ### Added
