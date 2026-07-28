@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+- Re-centred the product on the original GPX/KML-to-poster workflow.
+- Made route-file import the first and most prominent action.
+- Moved Google Maps link acquisition into a collapsed experimental advanced section.
+- Retained colour, photo and consent-based map backgrounds with bounded zoom.
+- Retained local projects, annotations, templates and SVG/PNG/JPEG export.
+- Added generated GPX/KML and provenance capabilities for advanced provider-routed journeys.
+- Updated release, documentation, browser assurance and product messaging.
+
 ## Unreleased — v0.3.0 development
 
 - Added a canonical Route Intent model and JSON Schema.

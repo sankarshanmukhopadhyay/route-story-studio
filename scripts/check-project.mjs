@@ -18,5 +18,5 @@ const required = [
 ];
 for (const path of required) await access(path);
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
-if (packageJson.version !== '0.2.0') throw new Error('package.json must declare version 0.2.0');
+if (packageJson.version !== '0.3.0') throw new Error('package.json must declare version 0.3.0');
 console.log(`Project checks passed: ${required.length} required files; release version ${packageJson.version}.`);

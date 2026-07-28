@@ -64,6 +64,7 @@ test('makes map consent discoverable and sends a website Referer', async ({ page
 
 test('reviews a supported Google Maps route intent locally', async ({ page }) => {
   await page.goto('/');
+  await page.locator('#advanced-google-maps').evaluate((node) => { node.open = true; });
   await page.locator('#map-link').fill('https://www.google.com/maps/dir/?api=1&origin=28.6139,77.2090&destination=Manali%2C%20India&travelmode=driving');
   await page.getByRole('button', { name: 'Review route intent' }).click();
   await expect(page.locator('#route-intent-review')).toBeVisible();
@@ -75,7 +76,8 @@ test('reviews a supported Google Maps route intent locally', async ({ page }) =>
 
 test('reveals provider resolution in sequence after route-intent review', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: '1. Choose a route source' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '1. Import a route' })).toBeVisible();
+  await page.locator('#advanced-google-maps').evaluate((node) => { node.open = true; });
   await page.locator('#map-link').fill('https://www.google.com/maps/dir/?api=1&origin=Delhi%2C%20India&destination=Manali%2C%20India&travelmode=driving');
   await page.getByRole('button', { name: 'Review route intent' }).click();
   await expect(page.locator('#provider-panel')).toBeVisible();
@@ -91,4 +93,13 @@ test('exposes bounded map zoom controls after map mode selection', async ({ page
   await expect(page.locator('#map-zoom-status')).toHaveText('Fit whole route');
   await page.getByRole('button', { name: 'Zoom map in' }).click();
   await expect(page.locator('#map-zoom-status')).toContainText('Closer');
+});
+
+test('presents GPX and KML import as the primary journey', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: '1. Import a route' })).toBeVisible();
+  await expect(page.getByText('PRIMARY · ROUTE FILE')).toBeVisible();
+  await expect(page.locator('#route-file')).toBeAttached();
+  await expect(page.locator('#advanced-google-maps')).not.toHaveAttribute('open', '');
+  await expect(page.getByText('Advanced: build a planned route from Google Maps')).toBeVisible();
 });

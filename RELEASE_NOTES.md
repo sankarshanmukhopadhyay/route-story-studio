@@ -1,41 +1,27 @@
-# Route Story Studio v0.2.0 — Route Composition Studio
+# Route Story Studio v0.3.0 — Route Poster Studio
 
-Route Story Studio v0.2.0 expands the local-first route workflow into a reusable composition environment for GPX and KML routes.
+Route Story Studio v0.3.0 closes the release around the product's simplest and clearest promise: import a GPX or KML file, choose a colour, photograph or consent-based map background, and export a polished route poster.
 
 ## Highlights
 
-- Import GPX 1.0/1.1 and supported KML 2.2 route structures.
-- Save projects in the browser and exchange portable `.rssproj` project files.
-- Add validated JPEG, PNG or WebP photo backgrounds without uploading them.
-- Add consent-based, route-aligned OpenStreetMap backgrounds.
-- Choose portrait, square, landscape, editorial, expedition, A4 and Letter layouts.
-- Add route-relative annotations that survive layout changes.
-- Export SVG, PNG and JPEG outputs.
-- Preserve route provenance and map attribution in saved projects and generated artefacts.
+- GPX 1.0/1.1 and supported KML import remain the primary workflow.
+- Solid-colour, local photograph and route-aligned OpenStreetMap backgrounds.
+- Explicit map consent, provider-policy safeguards and bounded zoom controls.
+- Portrait, square, landscape, editorial, expedition, A4 and Letter layouts.
+- Route-relative annotations and reusable browser-local projects.
+- SVG, PNG and JPEG export.
+- Generated GPX/KML and provenance receipts for reconstructed planned routes.
 
-## Map-provider reliability and policy alignment
+## Experimental advanced route acquisition
 
-The map workflow now sends a web-compatible Referer, uses the official HTTPS tile URL, preserves browser caching, limits each composition to nine tiles, loads at most two tiles concurrently and paces requests. It does not prefetch zoom levels or build offline tile archives.
+Google Maps link review, short-link expansion and openrouteservice-based route generation remain available under a collapsed **Advanced** section. They are secondary because they require external infrastructure and credentials and do not yet offer the reliability or simplicity of direct GPX/KML import.
 
-The studio detects HTTP 403 responses and the standard OpenStreetMap blocked-tile image. Blocked responses are rejected before composition so they cannot be embedded in exported route stories. The interface presents recovery links to the OpenStreetMap blocked-tiles guidance, tile usage policy and project issue tracker.
+The advanced workflow is explicitly classified as reconstruction of a planned route, not evidence of completed travel.
 
 ## Privacy
 
-GPX, KML, project, photograph, annotation and export processing remain in the browser. Map mode is the only feature that initiates a third-party network request, and it does so only after explicit user consent. The request discloses the visible route area, website origin and ordinary network metadata to the selected provider.
+GPX, KML, local project, photograph and image-export processing remain in the browser. OpenStreetMap requests occur only after explicit map consent. The experimental acquisition workflow sends data externally only after deliberate user actions.
 
-## Security and availability controls
+## Upgrade note
 
-The release includes bounded route, project, image, map and export processing; DTD/entity rejection; coordinate validation; image pixel limits; project schema validation; map request timeouts; tile response-size limits; blocked-tile detection; rendering budgets; and browser-level accessibility assurance.
-
-## Known limitations
-
-- Route geometry cannot yet be edited.
-- Google Maps links cannot yet be converted into GPX.
-- Projects do not synchronise across devices automatically.
-- OpenStreetMap's standard tile service is best-effort and may be unavailable or blocked.
-- Offline map packages are not supported.
-- Animated route export remains deferred.
-
-## Assurance
-
-The release pipeline runs structural, security, documentation and unit checks; builds and smoke-tests the static site; and exercises the core workflow in Chromium, Firefox, WebKit and a mobile Chromium viewport. It also checks for serious and critical automated accessibility violations.
+No project migration is required. Existing v0.2.0 projects remain compatible.

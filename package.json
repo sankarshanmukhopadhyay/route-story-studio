@@ -1,9 +1,9 @@
 {
   "name": "route-story-studio",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "Local-first GPX/KML route composition studio with controlled map-link acquisition, provider-neutral routing and reusable projects.",
+  "description": "Local-first GPX/KML route poster studio with colour, photo and consent-based map backgrounds; experimental route acquisition is secondary.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",

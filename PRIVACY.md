@@ -39,3 +39,7 @@ Users can clear saved provider credentials, reset the workspace, clear browser p
 ## Short-link resolution
 
 When the user explicitly expands a `maps.app.goo.gl` link, that short URL is sent to the configured resolver gateway. The reference gateway follows only approved Google Maps redirects and returns the final URL plus minimal redirect metadata. Complete URLs should not be retained in operational logs. The later provenance receipt contains a hash of the original short URL rather than the URL itself.
+
+## Product priority in v0.3.0
+
+Direct GPX/KML import is the primary workflow and requires no acquisition provider. Google Maps acquisition is collapsed under an experimental advanced section and invokes external services only after explicit user actions.

@@ -30,6 +30,6 @@ test('ordinary map-like pixels are not classified as a blocked notice', () => {
 
 test('application declares the map-compatible referrer policy', async () => {
   const html = await readFile('index.html', 'utf8');
-  assert.match(html, /name="referrer" content="strict-origin-when-cross-origin"/);
+  assert.match(html, /(?:name="referrer"[^>]*content="strict-origin-when-cross-origin"|content="strict-origin-when-cross-origin"[^>]*name="referrer")/);
   assert.doesNotMatch(html, /name="referrer" content="no-referrer"/);
 });

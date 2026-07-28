@@ -56,3 +56,7 @@ CI runs structural, unit, security-policy, documentation, static-build and brows
 ## Short-link resolver boundary
 
 The reference gateway accepts only `maps.app.goo.gl`, follows no more than five redirects across an exact Google Maps host allowlist, rejects private/local addresses and embedded credentials, enforces an eight-second request timeout, restricts CORS to configured application origins and returns metadata only. It must never be repurposed as an arbitrary URL proxy or page scraper.
+
+## v0.3.0 exposure boundary
+
+The primary GPX/KML poster workflow does not require the resolver or routing provider. Advanced acquisition code remains isolated behind a collapsed experimental interface and retains existing URL, redirect, credential, response-size and request-budget controls.

@@ -1,17 +1,11 @@
 # Roadmap
 
-## v0.2.0 — Route Composition Studio
+## v0.3.0 — Route Poster Studio
 
-Delivered: GPX and KML import, local projects, portable project files, photo and consent-based map backgrounds, route-aligned map composition, publication templates, route-relative annotations, SVG/PNG/JPEG export, provider-policy hardening and guided documentation.
+Delivered: a clear GPX/KML-first workflow for producing colour, photograph or consent-based map-backed route posters; reusable local projects; map zoom; templates and annotations; SVG, PNG and JPEG export; and provenance-aware generated GPX/KML.
 
-## v0.3.0 — Route acquisition and interoperability
-
-In development: supported Google Maps directions-link parsing and a canonical Route Intent model are now available. Next: constrained short-link expansion, geocoding and routing adapters, provenance-marked GPX/KML generation, and explicit disclosure when a route is reconstructed rather than recorded.
+The Google Maps acquisition workflow remains available under an experimental advanced section. It requires a separately deployed resolver and user-supplied routing-provider credentials and is not part of the primary user journey.
 
 ## v0.4.0 — Timelines and motion
 
 Planned: trip timelines, photo waypoints, animated route playback and richer story sequences.
-
-### v0.3.0 Commit 4 delivered
-
-Constrained Google Maps short-link expansion, acquisition trust-boundary hardening, resolution evidence and interoperability assurance. Short-link redirect resolution is separate from openrouteservice geocoding and route generation.
