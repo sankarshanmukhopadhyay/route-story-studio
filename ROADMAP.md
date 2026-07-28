@@ -1,33 +1,21 @@
 # Roadmap
 
-## v0.1.x: Local GPX studio
+## v0.1.0: Local GPX Studio
 
-- Harden GPX namespace handling and large-file performance
-- Add PNG export
-- Add poster layout presets
-- Add sample-route onboarding
-- Add browser-based end-to-end tests
+Released baseline: local GPX import, validation, statistics, configurable route-story layouts, SVG/PNG export, overload controls, browser assurance and user documentation.
 
-## v0.2.0: Route composition
+## v0.2.0: Composition and local projects
 
-- Optional map background using a clearly attributed provider
-- Photograph backgrounds and local EXIF handling
-- Multiple poster aspect ratios
-- Project save/load with schema migration
+- Optional photograph backgrounds
+- Optional map backgrounds with explicit provider disclosure
+- Additional layout templates
+- Local project save and restore
+- Waypoint annotations
 
-## v0.3.0: Map link to GPX
+## v0.3.0: Map-link to GPX
 
-- Parse supported Google Maps directions URLs
-- Resolve short links through an explicitly governed gateway
-- Add provider-neutral geocoding and routing interfaces
-- Mark generated GPX files as reconstructed planned routes
-- Preserve source URL, provider and generation time as provenance
-- Add route-equivalence warnings and conformance fixtures
-
-## v1.0.0: Stable public release
-
-- Accessibility review
-- Threat model validation
-- Browser support matrix
-- Stable schemas and migration policy
-- Reproducible releases and software bill of materials
+- Parse supported Google Maps direction links
+- Convert route intent through provider-neutral adapters
+- Export provenance-marked planned-route GPX
+- Make external routing disclosure explicit
+- Preserve the distinction between reconstructed and recorded geometry
