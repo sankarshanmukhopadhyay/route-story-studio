@@ -1,28 +1,39 @@
 # Architecture
 
-## Decision
+## System boundary
 
-The first implementation is dependency-light and local-first. Static assets are hosted on GitHub Pages. GPX files are parsed with the browser XML parser, normalised into an internal route document, analysed and rendered into SVG without server-side processing.
+Route Story Studio is a static, local-first browser application. GitHub Pages supplies immutable application assets. GPX content is read through browser file APIs and is not submitted to GitHub or an application backend.
 
-## Execution flow
+## Functional pipeline
 
-```mermaid
-flowchart LR
-  A[GPX file] --> B[Browser parser]
-  B --> C[Canonical route document]
-  C --> D[Statistics engine]
-  C --> E[SVG route renderer]
-  D --> F[Poster composer]
-  E --> F
-  F --> G[SVG download]
+```text
+GPX file or bundled sample
+  → constrained XML validation
+  → GPX 1.0/1.1 normalisation
+  → canonical route document
+  → segment-aware statistics
+  → layout and presentation state
+  → deterministic SVG poster
+  → local download
 ```
 
-## Authority and scope
+## Canonical route model
 
-The browser is the processing authority for imported route data. The application has no upload authority and no backend storage authority in the initial release.
+The model preserves segments rather than flattening disconnected geometry. This prevents the statistics and renderer from inventing a line between independent tracks. Each document records whether its source was interpreted as a recorded track or a planned route, together with import warnings and source metadata.
 
-A future routing adapter may receive narrowly scoped authority to transmit origin, destination and waypoint data to a user-selected provider. That authority must be explicit, revocable and visible in the interface.
+## Authority and provenance
+
+The source GPX remains authoritative for imported geometry and elevation. Route Story Studio computes presentation statistics but does not correct coordinates, infer a travelled route or claim that planned geometry was recorded. Any future map-link conversion must mark output as a reconstructed planned route and identify the routing provider.
+
+## Enforcement boundaries
+
+- Maximum file size: 25 MB
+- Maximum route points: 250,000
+- Latitude range: -90 to 90
+- Longitude range: -180 to 180
+- XML document type and entity declarations: rejected
+- External processing: absent from the current release line
 
 ## Evidence
 
-CI produces test results and a deployable static-site artefact. Exported route documents carry source and geometry-provenance fields so a reconstructed route is not represented as a recorded track.
+CI runs structural checks, unit tests and a deterministic static build. The built site is uploaded as workflow evidence and Pages deployment depends on successful validation.

@@ -28,3 +28,16 @@ test('formats route statistics for display', () => {
   assert.equal(formatDuration(93_600), '1d 2h');
   assert.equal(formatDuration(null), 'Not recorded');
 });
+
+test('does not connect separate route segments when calculating distance', () => {
+  const segments = [
+    { points: [{ latitude: 0, longitude: 0 }, { latitude: 0, longitude: 0.01 }] },
+    { points: [{ latitude: 10, longitude: 10 }, { latitude: 10, longitude: 10.01 }] }
+  ];
+  const result = calculateStatistics(segments);
+  assert.ok(result.distanceMetres > 2_000 && result.distanceMetres < 2_300);
+});
+
+test('formats imperial route distance', () => {
+  assert.equal(formatDistance(1609.344, 'imperial'), '1.0 mi');
+});

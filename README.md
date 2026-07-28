@@ -1,53 +1,45 @@
 # Route Story Studio
 
-[![CI](https://github.com/sankarshanmukhopadhyay/route-story-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/sankarshanmukhopadhyay/route-story-studio/actions/workflows/ci.yml)
-[![Deploy GitHub Pages](https://github.com/sankarshanmukhopadhyay/route-story-studio/actions/workflows/pages.yml/badge.svg)](https://github.com/sankarshanmukhopadhyay/route-story-studio/actions/workflows/pages.yml)
+Route Story Studio is a local-first web application for turning GPX tracks and planned GPX routes into configurable, shareable route posters.
 
-Route Story Studio is a local-first web application for turning GPX tracks into clean, shareable route artefacts. GPX parsing, statistics and poster rendering happen in the browser.
+> **Development status:** this repository is progressing towards `v0.1.0: Local GPX Studio`. The package version remains `0.0.0-development` until the release-preparation commit.
 
-## First-release capability
+## Current capability
 
-- Drag-and-drop GPX import
-- Route geometry validation
-- Distance, elapsed duration, elevation gain and loss
-- Responsive route-poster preview
-- Configurable title, subtitle, line width and visible statistics
-- SVG export suitable for high-resolution publishing
-- GitHub Pages deployment
-- Machine-readable route-document schema
-- CI tests and build evidence
+- Import GPX 1.0 and GPX 1.1 files in the browser
+- Preserve multiple track and route segments
+- Distinguish recorded tracks from planned routes
+- Validate coordinate, file-size and point-count boundaries
+- Calculate distance, duration, elevation gain and elevation loss
+- Use an included sample route for immediate onboarding
+- Choose portrait, square or landscape poster layouts
+- Switch between metric and imperial display
+- Customise route, background and text colours
+- Toggle elevation, duration and endpoint markers
+- Export the canonical poster as SVG
+- Deploy as a static GitHub Pages application
 
-## Run locally
-
-No runtime dependencies are required.
-
-```bash
-python3 -m http.server 8080
-```
-
-Open `http://localhost:8080` and import a GPX file.
-
-## Validate
+## Local development
 
 ```bash
-npm run check
-npm test
-npm run build
+npm run validate
+python3 -m http.server 8000
 ```
 
-## Processing boundary
+Open `http://localhost:8000`. A local HTTP server is required for the sample-route request.
 
-| Operation | Processing location |
-|---|---|
-| GPX import and parsing | Browser |
-| Route statistics | Browser |
-| Poster rendering | Browser |
-| SVG export | Browser |
-| Map-link reconstruction | Not yet implemented |
-| External map tiles | Not yet used |
+## Privacy boundary
 
-The planned Google Maps link-to-GPX capability will be introduced behind a provider-neutral routing boundary. It will label reconstructed routes distinctly from recorded tracks and require explicit consent before sending waypoints to an external routing provider.
+GPX parsing, statistics and rendering occur in the browser. The current application has no upload endpoint, user account, analytics service, cloud persistence, map tile request or external routing request.
 
-## Project status
+## GitHub Pages
 
-This is an initial implementation baseline. See [ROADMAP.md](ROADMAP.md) for planned increments.
+The Pages workflow builds `dist/` and deploys it after project checks and tests succeed. Configure **Settings → Pages → Build and deployment → GitHub Actions**.
+
+## Release roadmap
+
+- `v0.1.0`: hardened Local GPX Studio with SVG and PNG export and browser assurance
+- `v0.2.0`: richer composition, image/map backgrounds and local project persistence
+- `v0.3.0`: provenance-aware map-link-to-GPX conversion through provider adapters
+
+See [ROADMAP.md](ROADMAP.md), [PRIVACY.md](PRIVACY.md), [SECURITY.md](SECURITY.md) and [architecture documentation](docs/architecture.md).

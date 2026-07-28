@@ -1,16 +1,15 @@
 {
   "name": "route-story-studio",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "private": true,
   "type": "module",
   "description": "Local-first GPX route visualisation and story export studio.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "validate": "npm run check && npm test && npm run build"
   },
-  "engines": {
-    "node": ">=22"
-  },
+  "engines": { "node": ">=22" },
   "license": "MIT"
 }

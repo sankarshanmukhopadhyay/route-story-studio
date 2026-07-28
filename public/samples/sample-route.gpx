@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Route Story Studio" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>Himalayan Sample Route</name></metadata>
+  <trk><name>Himalayan Sample Route</name><trkseg>
+    <trkpt lat="27.3314" lon="88.6138"><ele>1650</ele><time>2026-01-01T08:00:00Z</time></trkpt>
+    <trkpt lat="27.3500" lon="88.6500"><ele>1810</ele><time>2026-01-01T08:25:00Z</time></trkpt>
+    <trkpt lat="27.3760" lon="88.6850"><ele>2050</ele><time>2026-01-01T08:55:00Z</time></trkpt>
+    <trkpt lat="27.4010" lon="88.7100"><ele>2280</ele><time>2026-01-01T09:30:00Z</time></trkpt>
+    <trkpt lat="27.4300" lon="88.7400"><ele>2470</ele><time>2026-01-01T10:05:00Z</time></trkpt>
+  </trkseg></trk>
+</gpx>
