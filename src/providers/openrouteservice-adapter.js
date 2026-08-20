@@ -25,6 +25,11 @@ function validateKey(value) {
 function validCoordinate([longitude, latitude]) {
   return Number.isFinite(longitude) && longitude >= -180 && longitude <= 180 && Number.isFinite(latitude) && latitude >= -90 && latitude <= 90;
 }
+function providerUrl(path) {
+  const url = new URL(path, OPENROUTESERVICE_PROVIDER.baseUrl);
+  if (url.protocol !== 'https:' || url.hostname !== 'api.openrouteservice.org') throw new Error('The routing provider URL is not approved.');
+  return url;
+}
 async function readJson(response) {
   const type = response.headers.get('content-type') || '';
   if (!/application\/(?:geo\+)?json/i.test(type)) throw new Error('The provider returned an unexpected response type.');
@@ -68,7 +73,7 @@ export function createOpenRouteServiceAdapter({ apiKey, fetchImpl } = {}) {
       const query = String(text || '').trim();
       if (!query || query.length > 240) throw new Error('The place name is empty or exceeds the 240-character limit.');
       consumeAcquisitionRequest('geocoding');
-      const url = new URL(`${OPENROUTESERVICE_PROVIDER.baseUrl}/geocode/search`);
+      const url = providerUrl('/geocode/search');
       url.searchParams.set('text', query); url.searchParams.set('size', String(MAX_GEOCODE_CANDIDATES));
       const json = await request(url, { headers: { Authorization: key, Accept: 'application/json' } }, timeoutMs, fetcher);
       const candidates = (Array.isArray(json.features) ? json.features : []).map(candidateFromFeature).filter(Boolean).slice(0, MAX_GEOCODE_CANDIDATES);
@@ -81,7 +86,7 @@ export function createOpenRouteServiceAdapter({ apiKey, fetchImpl } = {}) {
       if (!coordinates.every(validCoordinate)) throw new Error('One or more confirmed route locations contain invalid coordinates.');
       const profile = PROFILE_BY_MODE[travelMode] || PROFILE_BY_MODE.driving;
       consumeAcquisitionRequest('routing');
-      const json = await request(`${OPENROUTESERVICE_PROVIDER.baseUrl}/v2/directions/${profile}/geojson`, {
+      const json = await request(providerUrl(`/v2/directions/${profile}/geojson`), {
         method: 'POST', headers: { Authorization: key, Accept: 'application/geo+json, application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ coordinates })
       }, timeoutMs, fetcher);
       const feature = json?.features?.[0]; const line = feature?.geometry;
