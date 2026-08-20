@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { safeFileStem } from '../src/export/download.js';
-import { exportDimensions, MAX_EXPORT_PIXELS } from '../src/export/export-png.js';
+import { exportDimensions, maximumExportScale, MAX_EXPORT_PIXELS } from '../src/export/export-png.js';
 import { samplePoints, MAX_RENDER_POINTS } from '../src/render/poster-svg.js';
 import { LAYOUT_PRESETS } from '../src/render/layout-presets.js';
 
@@ -21,4 +21,11 @@ test('route rendering samples oversized point sets', () => {
   assert.equal(sampled.length, MAX_RENDER_POINTS);
   assert.equal(sampled[0], points[0]);
   assert.equal(sampled.at(-1), points.at(-1));
+});
+
+test('print layouts expose only supported raster scales', () => {
+  assert.equal(maximumExportScale(LAYOUT_PRESETS.portrait), 2);
+  assert.equal(maximumExportScale(LAYOUT_PRESETS.a4), 1);
+  assert.throws(() => exportDimensions(LAYOUT_PRESETS.a4, 2), /already/);
+  assert.deepEqual(exportDimensions(LAYOUT_PRESETS.a4, 1), { width: 2480, height: 3508, scale: 1 });
 });
