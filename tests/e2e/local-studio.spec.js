@@ -103,3 +103,27 @@ test('presents GPX and KML import as the primary journey', async ({ page }) => {
   await expect(page.locator('#advanced-google-maps')).not.toHaveAttribute('open', '');
   await expect(page.getByText('Advanced: build a planned route from Google Maps')).toBeVisible();
 });
+
+test('frames a route and edits individual annotations', async ({ page }) => {
+  await loadSample(page);
+  const before = await page.locator('#poster-preview path').first().getAttribute('d');
+  await page.locator('#route-scale').fill('1.5');
+  await page.locator('#route-rotation').fill('45');
+  await expect.poll(() => page.locator('#poster-preview path').first().getAttribute('d')).not.toBe(before);
+  await page.locator('#annotation-label').fill('Summit');
+  await page.getByRole('button', { name: 'Add annotation' }).click();
+  await expect(page.locator('#annotation-list li')).toHaveCount(1);
+  await page.locator('#annotation-list input[type="text"]').fill('High point');
+  await expect(page.locator('#poster-preview svg')).toContainText('High point');
+  await page.locator('#annotation-list').getByRole('button', { name: 'Remove' }).click();
+  await expect(page.locator('#annotation-list li')).toHaveCount(0);
+});
+
+test('keeps the live preview ahead of controls on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const preview = await page.locator('.preview-panel').boundingBox();
+  const controls = await page.locator('.control-panel').boundingBox();
+  expect(preview.y).toBeLessThan(controls.y);
+  await expect(page.locator('.preview-panel')).toHaveCSS('position', 'sticky');
+});
