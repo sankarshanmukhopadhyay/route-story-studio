@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Route framing controls for scale, rotation, offset and reversed start/finish markers.
+- Editable per-annotation controls and automatic annotation suggestions from imported GPX/KML waypoints.
+- A mobile editing layout that keeps the live poster visible above the controls.
+- Saved-project browsing, deletion and debounced browser-local autosave.
+- Curated colour themes, contrast guidance and exact raster export dimensions.
+
+### Fixed
+
+- Prevented unsupported 2× A4 and Letter exports from being offered.
+- Fitted long poster titles within layout bounds.
+- Restored an exact openrouteservice hostname boundary for provider requests.
+
 ### Fixed
 
 - Clarified elevation terminology throughout the interface and documentation.

@@ -12,4 +12,6 @@ test('parser defines bounded file, point and segment limits', () => {
   assert.match(parserSource, /MAX_FILE_BYTES = 8 \* 1024 \* 1024/);
   assert.match(parserSource, /MAX_POINTS = 100_000/);
   assert.match(parserSource, /MAX_SEGMENTS = 2_000/);
+  assert.match(parserSource, /MAX_WAYPOINTS = 2_000/);
+  assert.match(parserSource, /localElements\(root, 'wpt'\)/);
 });
