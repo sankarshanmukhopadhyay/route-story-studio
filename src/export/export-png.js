@@ -3,12 +3,20 @@ import { downloadBlob, safeFileStem } from './download.js';
 
 export const MAX_EXPORT_PIXELS = 12_000_000;
 
+export function maximumExportScale(preset) {
+  if (!preset || !Number.isFinite(preset.width) || !Number.isFinite(preset.height)) return 1;
+  return preset.width * preset.height * 4 <= MAX_EXPORT_PIXELS ? 2 : 1;
+}
+
 export function exportDimensions(preset, scale = 1) {
-  const safeScale = scale === 2 ? 2 : 1;
-  const width = Math.round(preset.width * safeScale);
-  const height = Math.round(preset.height * safeScale);
-  if (width * height > MAX_EXPORT_PIXELS) throw new Error('The requested image exceeds the export safety limit.');
-  return { width, height, scale: safeScale };
+  const requestedScale = scale === 2 ? 2 : 1;
+  const maximumScale = maximumExportScale(preset);
+  if (requestedScale > maximumScale) {
+    throw new Error(`High-resolution export is unavailable for this layout. Its standard size is already ${preset.width} × ${preset.height} pixels.`);
+  }
+  const width = Math.round(preset.width * requestedScale);
+  const height = Math.round(preset.height * requestedScale);
+  return { width, height, scale: requestedScale };
 }
 
 function canvasToBlob(canvas) {
