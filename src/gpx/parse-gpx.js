@@ -36,7 +36,7 @@ function preflightXml(xmlText) {
   const pointCount = countPointTags(xmlText);
   if (pointCount > MAX_POINTS) throw new Error(`The route contains more than ${MAX_POINTS.toLocaleString()} points.`);
   if (countSegmentTags(xmlText) > MAX_SEGMENTS) throw new Error(`The GPX file contains more than ${MAX_SEGMENTS.toLocaleString()} segments or routes.`);
-  const waypointCount = (xmlText.match(/<(?:[\\w.-]+:)?wpt\\b/gi) ?? []).length;
+  const waypointCount = (xmlText.match(/<(?:[\w.-]+:)?wpt\b/gi) ?? []).length;
   if (waypointCount > MAX_WAYPOINTS) throw new Error(`The GPX file contains more than ${MAX_WAYPOINTS.toLocaleString()} waypoints.`);
 }
 
