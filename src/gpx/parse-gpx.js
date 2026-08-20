@@ -1,6 +1,7 @@
 export const MAX_FILE_BYTES = 8 * 1024 * 1024;
 export const MAX_POINTS = 100_000;
 export const MAX_SEGMENTS = 2_000;
+export const MAX_WAYPOINTS = 2_000;
 export const MAX_METADATA_LENGTH = 500;
 
 function localElements(root, name) {
@@ -35,6 +36,8 @@ function preflightXml(xmlText) {
   const pointCount = countPointTags(xmlText);
   if (pointCount > MAX_POINTS) throw new Error(`The route contains more than ${MAX_POINTS.toLocaleString()} points.`);
   if (countSegmentTags(xmlText) > MAX_SEGMENTS) throw new Error(`The GPX file contains more than ${MAX_SEGMENTS.toLocaleString()} segments or routes.`);
+  const waypointCount = (xmlText.match(/<(?:[\\w.-]+:)?wpt\\b/gi) ?? []).length;
+  if (waypointCount > MAX_WAYPOINTS) throw new Error(`The GPX file contains more than ${MAX_WAYPOINTS.toLocaleString()} waypoints.`);
 }
 
 function parsePoint(node, index) {
@@ -87,11 +90,16 @@ export function parseGpx(xmlText, sourceName = 'route.gpx') {
   if (pointCount > MAX_POINTS) throw new Error(`The route contains more than ${MAX_POINTS.toLocaleString()} points.`);
 
   const points = segments.flatMap((segment) => segment.points);
+  const waypoints = localElements(root, 'wpt').map((node, index) => {
+    const point = parsePoint(node, pointIndex++);
+    return { id: `waypoint-${index + 1}`, name: boundedText(childText(node, 'name'), `Waypoint ${index + 1}`), latitude: point.latitude, longitude: point.longitude };
+  });
   const warnings = [];
   if (!points.some((point) => Number.isFinite(point.elevationMetres))) warnings.push('No elevation values were found.');
   if (!points.some((point) => point.timestamp instanceof Date)) warnings.push('No valid timestamps were found.');
   if (version !== '1.0' && version !== '1.1') warnings.push(`GPX version ${version} is not explicitly recognised; compatible elements were imported.`);
   if (segments.length > 1) warnings.push(`${segments.length} route segments were preserved.`);
+  if (waypoints.length) warnings.push(`${waypoints.length} GPX waypoint${waypoints.length === 1 ? '' : 's'} retained for optional poster annotations.`);
 
   const sourceType = segmentNodes.length ? 'recorded-track' : 'planned-route';
   return {
@@ -101,7 +109,7 @@ export function parseGpx(xmlText, sourceName = 'route.gpx') {
     sourceType,
     segments,
     points,
-    waypoints: [],
+    waypoints,
     source: { type: 'gpx', name: boundedText(sourceName, 'route.gpx'), version },
     provenance: { geometrySource: sourceType, warnings }
   };
