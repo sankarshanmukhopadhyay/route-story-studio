@@ -1,9 +1,9 @@
 {
   "name": "route-story-studio",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
-  "description": "Local-first GPX/KML route poster studio with colour, photo and consent-based map backgrounds; experimental route acquisition is secondary.",
+  "description": "Local-first GPX/KML route poster and story studio with timelines, photo waypoints, deterministic playback and portable story export.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "check": "node scripts/check-project.mjs",
