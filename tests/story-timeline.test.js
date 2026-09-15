@@ -28,13 +28,13 @@ test('timeline derives temporal semantics only when the complete route is timest
   assert.equal(playbackProgress(fallback, 15_000), 0.5);
 });
 
-test('seek resolves the last deterministic event at or before progress', () => {
+test('seek clamps progress and resolves the last deterministic event at or before it', () => {
   const events = [
     { id: 'finish', progress: 1 },
     { id: 'middle', progress: 0.5 },
     { id: 'start', progress: 0 }
   ];
   assert.equal(eventAtOrBefore(events, 0.75).id, 'middle');
-  assert.equal(eventAtOrBefore(events, -1), null);
+  assert.equal(eventAtOrBefore(events, -1).id, 'start');
   assert.equal(eventAtOrBefore(events, 2).id, 'finish');
 });
