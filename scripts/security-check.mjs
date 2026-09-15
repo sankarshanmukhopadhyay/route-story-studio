@@ -13,6 +13,8 @@ const shortResolver = await readFile('src/acquisition/short-link-resolver.js', '
 const gatewayPolicy = await readFile('gateway/src/redirect-policy.js', 'utf8');
 const gateway = await readFile('gateway/src/index.js', 'utf8');
 
+const semverPatchGuard = "steps.metadata.outputs.update-type == 'version-update:semver-patch'";
+const semverMinorGuard = "steps.metadata.outputs.update-type == 'version-update:semver-minor'";
 const requirements = [
   [html.includes('Content-Security-Policy'), 'Content Security Policy is missing.'],
   [html.includes('strict-origin-when-cross-origin'), 'Map-compatible Referrer-Policy is missing.'],
@@ -26,6 +28,9 @@ const requirements = [
   [projectModel.includes('MAX_PROJECT_POINTS'), 'Project route-point boundary is missing.'],
   [autoMerge.includes("github.actor == 'dependabot[bot]'"), 'Dependabot actor restriction is missing.'],
   [!autoMerge.includes('actions/checkout'), 'Auto-merge workflow must not check out pull-request code.'],
+  [autoMerge.split(semverPatchGuard).length - 1 === 2, 'Every Dependabot approval/merge gate must require a semver-patch update.'],
+  [autoMerge.split(semverMinorGuard).length - 1 === 2, 'Every Dependabot approval/merge gate must require a semver-minor update.'],
+  [!autoMerge.includes("package-ecosystem == 'github_actions'"), 'GitHub Actions updates must not bypass semver auto-merge bounds.'],
   [mapLoader.includes("cache: 'default'"), 'Map requests must preserve browser caching.'],
   [mapLoader.includes('TILE_REQUEST_CONCURRENCY = 2'), 'Map request concurrency boundary is missing.'],
   [mapLoader.includes('looksLikeBlockedTilePixels'), 'Blocked-tile detection is missing.'],
