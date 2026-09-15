@@ -141,7 +141,9 @@ test('authors, plays, saves and reopens a v0.4 story moment', async ({ page }) =
   await page.getByRole('button', { name: 'Save in browser' }).click();
   await expect(page.locator('#draft-status')).toContainText('All changes saved locally.');
   await page.reload();
-  await page.locator('#project-list').selectOption({ index: 1 }).catch(() => {});
+  await expect.poll(async () => page.locator('#project-list option').count()).toBeGreaterThan(0);
+  await page.locator('#project-list').selectOption({ index: 0 });
+  await expect(page.getByRole('button', { name: 'Open selected' })).toBeEnabled();
   await page.getByRole('button', { name: 'Open selected' }).click();
   await expect(page.locator('#story-event-list')).toContainText('Ridge viewpoint');
 });
