@@ -1,0 +1,84 @@
+name: Bug report
+description: Report reproducible incorrect behavior in Route Story Studio
+title: "fix: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide the smallest reproducible case you can. Do not upload private GPX/KML journeys, API keys, sensitive photographs, or other secrets.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide deterministic steps using non-sensitive sample data where possible.
+      placeholder: |
+        1. Open ...
+        2. Import ...
+        3. Select ...
+        4. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chromium 153 / Firefox 155 / Safari 26 ...
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS / Windows / Linux / iOS / Android
+    validations:
+      required: true
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Affected workflow
+      options:
+        - GPX/KML import
+        - Poster editing/export
+        - Timeline/story authoring
+        - Photo waypoint
+        - Playback
+        - Local project save/reopen
+        - Portable story export
+        - Experimental route acquisition
+        - Documentation/site
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Non-sensitive evidence
+      description: Add console output, screenshots, or minimal synthetic files only when they contain no private route/media/credential data.
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Submission boundaries
+      options:
+        - label: I have removed API keys, private route data, sensitive photographs, and other secrets from this report.
+          required: true

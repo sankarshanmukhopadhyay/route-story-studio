@@ -1,0 +1,60 @@
+name: Feature proposal
+description: Propose a bounded improvement for Route Story Studio
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Route Story Studio is maintained through proposal-driven development. Please describe the user problem and the evidence that would demonstrate a successful change. Do not include private journey data, API keys, or sensitive photo metadata.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and user value
+      description: What concrete problem exists, for whom, and why is it worth solving?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Proposed outcome
+      description: Describe the capability or behavior you want, without prescribing unnecessary implementation details.
+    validations:
+      required: true
+  - type: textarea
+    id: local_first
+    attributes:
+      label: Local-first and privacy impact
+      description: Does this change require network access, external processing, new data retention, media handling, or disclosure? State "none" if not applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and migration impact
+      description: Identify any effect on existing GPX/KML imports, saved projects, exports, schemas, or browser support. State "none" if not applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Testable acceptance criteria
+      description: What machine-verifiable or observable evidence would establish that this proposal is complete?
+      placeholder: |
+        - [ ] Existing workflows remain green
+        - [ ] New behavior is covered by deterministic tests
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or prior art
+      description: Optional links or approaches that help evaluate the proposal.
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Submission boundaries
+      options:
+        - label: I have not included API keys, private route data, sensitive photographs, or other secrets in this issue.
+          required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contribution guidance
+    url: https://github.com/sankarshanmukhopadhyay/route-story-studio/blob/main/CONTRIBUTING.md
+    about: Review the contribution, privacy and evidence requirements before proposing code changes.
+  - name: Security policy
+    url: https://github.com/sankarshanmukhopadhyay/route-story-studio/security/policy
+    about: Report security vulnerabilities through the repository security policy rather than a public issue.
