@@ -73,7 +73,6 @@ test('reviews a supported Google Maps route intent locally', async ({ page }) =>
   await expect(page.locator('#intent-mode')).toHaveText('driving');
 });
 
-
 test('reveals provider resolution in sequence after route-intent review', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: '1. Import a route' })).toBeVisible();
@@ -126,4 +125,35 @@ test('keeps the live preview ahead of controls on mobile', async ({ page }) => {
   const controls = await page.locator('.control-panel').boundingBox();
   expect(preview.y).toBeLessThan(controls.y);
   await expect(page.locator('.preview-panel')).toHaveCSS('position', 'sticky');
+});
+
+test('authors, plays, saves and reopens a v0.4 story moment', async ({ page }) => {
+  await loadSample(page);
+  await expect(page.locator('#story-timeline-status')).toContainText(/journey|Route progress/);
+  await page.locator('#story-moment-title').fill('Ridge viewpoint');
+  await page.locator('#story-moment-body').fill('Windy but clear.');
+  await page.locator('#story-progress').fill('35');
+  await page.getByRole('button', { name: 'Add story moment' }).click();
+  await expect(page.locator('#story-event-list li')).toHaveCount(1);
+  await expect(page.locator('#story-event-list')).toContainText('Ridge viewpoint');
+  await page.locator('#story-playback-seek').fill('35');
+  await expect(page.locator('#story-playback-value')).toHaveText('35%');
+  await page.getByRole('button', { name: 'Save in browser' }).click();
+  await expect(page.locator('#draft-status')).toContainText('All changes saved locally.');
+  await page.reload();
+  await expect.poll(async () => page.locator('#project-list option').count()).toBeGreaterThan(0);
+  await page.locator('#project-list').selectOption({ index: 0 });
+  await expect(page.getByRole('button', { name: 'Open selected' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Open selected' }).click();
+  await expect(page.locator('#story-event-list')).toContainText('Ridge viewpoint');
+});
+
+test('exports a self-contained v0.4 story HTML artefact', async ({ page }) => {
+  await loadSample(page);
+  await page.locator('#story-moment-title').fill('Portable moment');
+  await page.getByRole('button', { name: 'Add story moment' }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export story HTML' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/\.html$/);
 });

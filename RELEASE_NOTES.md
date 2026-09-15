@@ -1,32 +1,37 @@
-# Route Story Studio v0.3.0 — Route Poster Studio
+# Route Story Studio v0.4.0 — Timelines and motion
 
-Route Story Studio v0.3.0 closes the release around the product's simplest and clearest promise: import a GPX or KML file, choose a colour, photograph or consent-based map background, and export a polished route poster.
+Route Story Studio v0.4.0 extends the local-first route-poster workflow into a route-story workflow without making story authoring mandatory.
 
 ## Highlights
 
 - GPX 1.0/1.1 and supported KML import remain the primary workflow.
-- Solid-colour, local photograph and route-aligned OpenStreetMap backgrounds.
-- Explicit map consent, provider-policy safeguards and bounded zoom controls.
-- Portrait, square, landscape, editorial, expedition, A4 and Letter layouts.
-- Route-relative annotations and reusable browser-local projects.
-- SVG, PNG and JPEG export.
-- Generated GPX/KML and provenance receipts for reconstructed planned routes.
+- Timestamp-derived journey timelines with deterministic route-progress fallback when timestamps are unavailable.
+- Ordered narrative moments anchored explicitly to route progress.
+- Privacy-bounded local photo waypoints with mandatory accessible captions/descriptions.
+- Browser-local image decode and canvas re-encode so source EXIF/XMP/IPTC metadata is not copied into prepared story media.
+- Deterministic play, pause, seek and restart controls with reduced-motion behavior.
+- Rich story sequences combining narrative/photo moments with existing route annotations.
+- Schema 3.0 project persistence with deterministic migration from supported schema 2.0 projects.
+- Dedicated browser-local IndexedDB retention for prepared story-photo payloads, separate from bounded project metadata.
+- Self-contained portable HTML story export with escaped authored content and a restrictive network-free CSP.
+- Existing SVG, PNG and JPEG poster exports remain available with zero story events.
 
-## Experimental advanced route acquisition
+## Privacy and security
 
-Google Maps link review, short-link expansion and openrouteservice-based route generation remain available under a collapsed **Advanced** section. They are secondary because they require external infrastructure and credentials and do not yet offer the reliability or simplicity of direct GPX/KML import.
+GPX, KML, project, story, photograph, playback and story-export processing remain local by default. Story photographs are not uploaded. Photo location/time are not inferred from embedded metadata. Portable story HTML allows embedded `data:` images and contains no external scripts or runtime network dependency.
 
-The advanced workflow is explicitly classified as reconstruction of a planned route, not evidence of completed travel.
+The existing OpenStreetMap consent boundary and experimental provider-based route-acquisition disclosures remain unchanged.
 
-## Privacy
+## Compatibility
 
-GPX, KML, local project, photograph and image-export processing remain in the browser. OpenStreetMap requests occur only after explicit map consent. The experimental acquisition workflow sends data externally only after deliberate user actions.
+Existing schema 2.0 project files migrate deterministically to schema 3.0 with empty story state. Existing route, composition and annotation state is retained. Unsupported project schemas fail closed.
 
-## Upgrade note
+The established GPX/KML → poster workflow remains regression-covered and does not require story authoring.
 
-No project migration is required. Existing v0.2.0 projects remain compatible.
+## Assurance
 
+Release acceptance is evidence-backed by unit/negative tests, project migration and round-trip tests, built-site smoke testing, Chromium/Firefox/WebKit end-to-end coverage, accessibility checks, story save/reopen tests and portable-export security tests. See `docs/v0.4-assurance.md`.
 
-## Elevation in the poster and summary
+## Advanced route acquisition
 
-The generated poster now shows **Elevation range**, which is the highest point minus the lowest point represented in the route. The route summary uses simpler wording and shows **Total climb**, **Elevation range**, **Highest point** and **Lowest point** so the numbers are easier to understand.
+Google Maps link review, constrained short-link expansion and openrouteservice-based planned-route generation remain under the collapsed **Advanced** workflow. Generated geometry is explicitly classified as reconstruction of a planned route rather than evidence of completed travel.

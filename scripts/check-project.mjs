@@ -4,6 +4,8 @@ const required = [
   'index.html', 'assets/styles.css', 'src/app.js', 'src/gpx/parse-gpx.js',
   'src/render/poster-svg.js', 'src/export/export-png.js', 'src/kml/parse-kml.js', 'src/import/parse-route-file.js',
   'src/project/project-model.js', 'src/project/project-file.js', 'src/storage/indexeddb.js',
+  'src/domain/story-timeline.js', 'src/story/story-session.js', 'src/story/story-ui.js', 'src/story/playback.js', 'src/story/story-sequence.js',
+  'src/media/photo-waypoint.js', 'src/export/export-story-html.js',
   'schemas/route-document.schema.json', 'schemas/route-intent.schema.json', 'schemas/route-generation-receipt.schema.json',
   'src/generation/generate-gpx.js', 'src/generation/generate-kml.js', 'src/generation/generation-receipt.js',
   'src/providers/provider-registry.js',
@@ -14,9 +16,11 @@ const required = [
   'docs/routing-providers.html', 'schemas/route-story-project.schema.json',
   'docs/index.html', 'docs/getting-started.html', 'docs/supported-gpx.html',
   'docs/privacy-model.html', 'docs/security-model.html', 'docs/known-limitations.html',
-  'docs/map-backgrounds.html', 'docs/converting-map-links.html', 'docs/templates-and-annotations.html', 'docs/release-checklist.html', 'RELEASE_NOTES.md', 'SBOM.spdx.json'
+  'docs/map-backgrounds.html', 'docs/converting-map-links.html', 'docs/templates-and-annotations.html', 'docs/release-checklist.html',
+  'docs/v0.4-assurance.md', 'docs/v0.4-integration-notes.md', 'docs/releases/v0.4.0.md',
+  'RELEASE_NOTES.md', 'SBOM.spdx.json'
 ];
 for (const path of required) await access(path);
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
-if (packageJson.version !== '0.3.0') throw new Error('package.json must declare version 0.3.0');
+if (packageJson.version !== '0.4.0') throw new Error('package.json must declare version 0.4.0');
 console.log(`Project checks passed: ${required.length} required files; release version ${packageJson.version}.`);

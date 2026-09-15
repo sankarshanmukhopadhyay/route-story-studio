@@ -8,4 +8,6 @@ The Google Maps acquisition workflow remains available under an experimental adv
 
 ## v0.4.0 — Timelines and motion
 
-Planned: trip timelines, photo waypoints, animated route playback and richer story sequences.
+Delivered: deterministic trip timelines with timestamp/progress fallback; narrative moments; privacy-bounded local photo waypoints; accessible play, pause, seek and restart controls; richer ordered story sequences; schema 3.0 project persistence with v0.3 migration; browser-local story-media retention; and self-contained portable HTML story export.
+
+Release acceptance remains evidence-gated by the repository validation, built-site smoke, cross-browser/accessibility and privacy/security regression suite. Any subsequent transition to a feature-complete/maintained state and proposal-driven roadmap governance is a separate lifecycle decision.
